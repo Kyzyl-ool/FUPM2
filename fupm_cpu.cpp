@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 using std::cout;
 using std::cin;
@@ -223,6 +224,15 @@ void LOADR2		(registers r, unsigned int number);
 void STORER2	(registers ri, registers ro, int number);
 };
 
+void normalize_float(double number, double* mantiss, int* n)
+{
+	int i = 0;
+	while (log2(number) - i >= 1) i++;
+	*mantiss = number;
+	for (int j = 0; j < i; j++) *mantiss /= 2;
+	*n = i;
+}
+
 FUPM_CPU::FUPM_CPU(string filename)
 {
 	running = false;
@@ -351,13 +361,7 @@ void FUPM_CPU::MOV		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::ADDD		(registers ri, registers ro, int number)
 {
-	Registers[ri] += Registers[ro];
-	Registers[ri+1] += Registers[ro+1];
-	if (Registers[ri+1] < 0)
-	{
-		Registers[ri]++;
-		Registers[ri+1] -= (1 >> 32);
-	}
+	
 }
 void FUPM_CPU::SUBD		(registers ri, registers ro, int number)
 {
