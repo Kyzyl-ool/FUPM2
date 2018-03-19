@@ -6,6 +6,7 @@
 #include <cmath>
 
 #define STACK_SIZE 1024
+#define DEFAULT_MEMORY_SIZE 65536
 
 using std::cout;
 using std::cin;
@@ -163,9 +164,12 @@ class FUPM_CPU
 private:
 	bool running;
 	int Registers[16];
+	char Flags; // 3 - ne, 2 - e, 1 - g, 0 - l
 	int Stack[STACK_SIZE];
+	int Stack_addr[STACK_SIZE];
 	int* commands; 			unsigned int amount_of_commands;
 	int* labels; 			unsigned int amount_of_labels;
+	int* memory;			unsigned int memory_size;
 	
 	
 public:
@@ -210,20 +214,20 @@ public:
 	void CMP		(registers ri, registers ro, int number);
 	void CMPI		(registers r, int number);
 	void CMPD		(registers ri, registers ro, int number);
-	void JMP		(registers r, unsigned int number);
-	void JNE		(registers r, unsigned int number);
-	void JEQ		(registers r, unsigned int number);
-	void JLE		(registers r, unsigned int number);
-	void JL			(registers r, unsigned int number);
-	void JGE		(registers r, unsigned int number);
-	void JG			(registers r, unsigned int number);
+	void JMP		(unsigned int number);
+	void JNE		(unsigned int number);
+	void JEQ		(unsigned int number);
+	void JLE		(unsigned int number);
+	void JL			(unsigned int number);
+	void JGE		(unsigned int number);
+	void JG			(unsigned int number);
 	void LOAD		(registers r, unsigned int number);
 	void STORE		(registers r, unsigned int number);
 	void LOAD2		(registers r, unsigned int number);
 	void STORE2		(registers r, unsigned int number);
 	void LOADR		(registers ri, registers ro, int number);
 	void STORER		(registers ri, registers ro, int number);
-	void LOADR2		(registers r, unsigned int number);
+	void LOADR2		(registers ri, registers ro, int number);
 	void STORER2	(registers ri, registers ro, int number);
 };
 
@@ -240,9 +244,20 @@ FUPM_CPU::FUPM_CPU()
 {
 	running = false;
 	commands = nullptr;
+	labels = nullptr;
 	amount_of_commands = 0;
 	amount_of_labels = 0;
+	Flags = 0;
 	for (int i = 0; i < r15; i++) Registers[i] = 0;
+	memory = (int* )calloc(DEFAULT_MEMORY_SIZE, sizeof(int));
+	memory_size = DEFAULT_MEMORY_SIZE;
+	for (int i = 0; i < STACK_SIZE; i++)
+	{
+		Stack[i] = 0;
+		Stack_addr[i] = 0;
+	}
+	
+	
 	//начать выполнение файла
 }
 
@@ -437,75 +452,96 @@ void FUPM_CPU::RET		(registers r, int number)
 {
 	
 }
+
 void FUPM_CPU::CMP		(registers ri, registers ro, int number)
 {
-	
+	if (Registers[ri] == Registers[ro])
+		Flags = 0b0100;
+	else if (Registers[ri] > Registers[ro])
+		Flags = 0b1010;
+	else
+		Flags = 0b1001;
 }
 void FUPM_CPU::CMPI		(registers r, int number)
 {
-	
+	if (Registers[r] == number)
+		Flags = 0b0100;
+	else if (Registers[r] > number)
+		Flags = 0b1010;
+	else
+		Flags = 0b1001;
 }
 void FUPM_CPU::CMPD		(registers ri, registers ro, int number)
 {
 	
 }
-void FUPM_CPU::JMP		(registers r, unsigned int number)
+void FUPM_CPU::JMP		(unsigned int number)
 {
-	
+	Registers[r15] = number;
 }
-void FUPM_CPU::JNE		(registers r, unsigned int number)
+void FUPM_CPU::JNE		(unsigned int number)
 {
-	
+	if (Flags & 0b1000)
+		Registers[r15] = number;
 }
-void FUPM_CPU::JEQ		(registers r, unsigned int number)
+void FUPM_CPU::JEQ		(unsigned int number)
 {
-	
+	if (Flags & 0b0100)
+		Registers[r15] = number;
 }
-void FUPM_CPU::JLE		(registers r, unsigned int number)
+void FUPM_CPU::JLE		(unsigned int number)
 {
-	
+	if (Flags & 0b0101)
+		Registers[r15] = number;
 }
-void FUPM_CPU::JL			(registers r, unsigned int number)
+void FUPM_CPU::JL			(unsigned int number)
 {
-	
+	if (Flags & 0b0001)
+		Registers[r15] = number;
 }
-void FUPM_CPU::JGE		(registers r, unsigned int number)
+void FUPM_CPU::JGE		(unsigned int number)
 {
-	
+	if (Flags & 0b0110)
+		Registers[r15] = number;
 }
-void FUPM_CPU::JG			(registers r, unsigned int number)
+void FUPM_CPU::JG			(unsigned int number)
 {
-	
+	if (Flags & 0b0010)
+		Registers[r15] = number;
 }
 void FUPM_CPU::LOAD		(registers r, unsigned int number)
 {
-	
+	Registers[r] = memory[number];
 }
 void FUPM_CPU::STORE		(registers r, unsigned int number)
 {
-	
+	memory[number] = Registers[r];
 }
 void FUPM_CPU::LOAD2		(registers r, unsigned int number)
 {
-	
+	Registers[r] = memory[number];
+	Registers[r+1] = memory[number+1];
 }
 void FUPM_CPU::STORE2		(registers r, unsigned int number)
 {
-	
+	memory[number] = Registers[r];
+	memory[number+1] = Registers[r+1];
 }
 void FUPM_CPU::LOADR		(registers ri, registers ro, int number)
 {
-	
+	Registers[ri] = Registers[ro] + number;
 }
 void FUPM_CPU::STORER		(registers ri, registers ro, int number)
 {
-	
+	memory[ro] = Registers[ri] + number;
 }
-void FUPM_CPU::LOADR2		(registers r, unsigned int number)
+void FUPM_CPU::LOADR2		(registers ri, registers ro, int number)
 {
-	
+	Registers[ri] = Registers[ro] + number;
+	Registers[ri+1] = Registers[ro] + number + 1;
 }
 void FUPM_CPU::STORER2	(registers ri, registers ro, int number)
 {
-	
+	memory[ro] = Registers[ri] + number;
+	memory[ro+1] = Registers[ri+1] + number;
 }
