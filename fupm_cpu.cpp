@@ -5,6 +5,8 @@
 #include <fstream>
 #include <cmath>
 
+#define STACK_SIZE 1024
+
 using std::cout;
 using std::cin;
 using std::endl;
@@ -101,127 +103,128 @@ data ops[] =
 	{71, "storer2", RR}
 };
 
-enum code {
-    HALT = 0,
-    SYSCALL = 1,
-    ADD = 2,
-    ADDI = 3,
-    SUB = 4,
-    SUBI = 5,
-    MUL = 6,
-    MULI = 7,
-    DIV = 8,
-    DIVI = 9,
-    LC = 12,
-    SHL = 13,
-    SHLI = 14,
-    SHR = 15,
-    SHRI = 16,
-    AND = 17,
-    ANDI = 18,
-    OR = 19,
-    ORI = 20,
-    XOR = 21,
-    XORI = 22,
-    NOT = 23,
-    MOV = 24,
-	ADDD = 32,
-    SUBD = 33,
-    MULD = 34,
-    DIVD = 35,
-    ITOD = 36,
-    DTOI = 37,
-    PUSH = 38,
-    POP = 39,
-    CALL = 40,
-    CALLI = 41,
-    RET = 42,
-    CMP = 43,
-    CMPI = 44,
-    CMPD = 45,
-    JMP = 46,
-    JNE = 47,
-    JEQ = 48,
-    JLE = 49,
-    JL = 50,
-    JGE = 51,
-    JG = 52,
-    LOAD = 64,
-    STORE = 65,
-    LOAD2 = 66,
-    STORE2 = 67,
-    LOADR = 68,
-    LOADR2 = 69,
-    STORER = 70,
-    STORER2 = 71
-};
+//~ enum code {
+    //~ HALT = 0,
+    //~ SYSCALL = 1,
+    //~ ADD = 2,
+    //~ ADDI = 3,
+    //~ SUB = 4,
+    //~ SUBI = 5,
+    //~ MUL = 6,
+    //~ MULI = 7,
+    //~ DIV = 8,
+    //~ DIVI = 9,
+    //~ LC = 12,
+    //~ SHL = 13,
+    //~ SHLI = 14,
+    //~ SHR = 15,
+    //~ SHRI = 16,
+    //~ AND = 17,
+    //~ ANDI = 18,
+    //~ OR = 19,
+    //~ ORI = 20,
+    //~ XOR = 21,
+    //~ XORI = 22,
+    //~ NOT = 23,
+    //~ MOV = 24,
+	//~ ADDD = 32,
+    //~ SUBD = 33,
+    //~ MULD = 34,
+    //~ DIVD = 35,
+    //~ ITOD = 36,
+    //~ DTOI = 37,
+    //~ PUSH = 38,
+    //~ POP = 39,
+    //~ CALL = 40,
+    //~ CALLI = 41,
+    //~ RET = 42,
+    //~ CMP = 43,
+    //~ CMPI = 44,
+    //~ CMPD = 45,
+    //~ JMP = 46,
+    //~ JNE = 47,
+    //~ JEQ = 48,
+    //~ JLE = 49,
+    //~ JL = 50,
+    //~ JGE = 51,
+    //~ JG = 52,
+    //~ LOAD = 64,
+    //~ STORE = 65,
+    //~ LOAD2 = 66,
+    //~ STORE2 = 67,
+    //~ LOADR = 68,
+    //~ LOADR2 = 69,
+    //~ STORER = 70,
+    //~ STORER2 = 71
+//~ };
 
 class FUPM_CPU
 {
 private:
 	bool running;
 	int Registers[16];
-	int* commands; 	unsigned int amount_of_commands;
-	int* labels; 	unsigned int amount_of_labels;
+	int Stack[STACK_SIZE];
+	int* commands; 			unsigned int amount_of_commands;
+	int* labels; 			unsigned int amount_of_labels;
 	
 	
 public:
-	FUPM_CPU(string filename);
+	FUPM_CPU();
 	~FUPM_CPU();
-void dump(string output_filename);
+	void dump();
 	
-void HALT		(registers r, int number);
-void SYSCALL	(registers r, int number);
-void ADD		(registers ri, registers ro, int number);
-void ADDI		(registers r, int number);
-void SUB		(registers ri, registers ro, int number);
-void SUBI		(registers r, int number);
-void MUL		(registers ri, registers ro);
-void MULI		(registers r, int number);
-void DIV		(registers ri, registers ro);
-void DIVI		(registers r, int number);
-void LC			(registers r, int number);
-void SHL		(registers ri, registers ro);
-void SHLI		(registers r, int number);
-void SHR		(registers ri, registers ro);
-void SHRI		(registers r, int number);
-void AND		(registers ri, registers ro);
-void ANDI		(registers r, int number);
-void OR			(registers ri, registers ro);
-void ORI		(registers r, int number);
-void XOR		(registers ri, registers ro);
-void XORI		(registers r, int number);
-void NOT		(registers r, int number);
-void MOV		(registers ri, registers ro, int number);
-void ADDD		(registers ri, registers ro, int number);
-void SUBD		(registers ri, registers ro, int number);
-void MULD		(registers ri, registers ro, int number);
-void DIVD		(registers ri, registers ro, int number);
-void ITOD		(registers ri, registers ro, int number);
-void DTOI		(registers ri, registers ro, int number);
-void PUSH		(registers r, int number);
-void POP		(registers r, int number);
-void CALL		(registers ri, registers ro, int number);
-void CALLI		(registers r, unsigned int number);
-void RET		(registers r, int number);
-void CMP		(registers ri, registers ro, int number);
-void CMPI		(registers r, int number);
-void CMPD		(registers ri, registers ro, int number);
-void JMP		(registers r, unsigned int number);
-void JNE		(registers r, unsigned int number);
-void JEQ		(registers r, unsigned int number);
-void JLE		(registers r, unsigned int number);
-void JL			(registers r, unsigned int number);
-void JGE		(registers r, unsigned int number);
-void JG			(registers r, unsigned int number);
-void LOAD		(registers r, unsigned int number);
-void STORE		(registers r, unsigned int number);
-void LOAD2		(registers r, unsigned int number);
-void STORE2		(registers r, unsigned int number);
-void LOADR		(registers ri, registers ro, int number);
-void STORER		(registers ri, registers ro, int number);
-void LOADR2		(registers r, unsigned int number);
-void STORER2	(registers ri, registers ro, int number);
+	void HALT		(registers r, int number);
+	void SYSCALL	(registers r, int number);
+	void ADD		(registers ri, registers ro, int number);
+	void ADDI		(registers r, int number);
+	void SUB		(registers ri, registers ro, int number);
+	void SUBI		(registers r, int number);
+	void MUL		(registers ri, registers ro);
+	void MULI		(registers r, int number);
+	void DIV		(registers ri, registers ro);
+	void DIVI		(registers r, int number);
+	void LC			(registers r, int number);
+	void SHL		(registers ri, registers ro);
+	void SHLI		(registers r, int number);
+	void SHR		(registers ri, registers ro);
+	void SHRI		(registers r, int number);
+	void AND		(registers ri, registers ro);
+	void ANDI		(registers r, int number);
+	void OR			(registers ri, registers ro);
+	void ORI		(registers r, int number);
+	void XOR		(registers ri, registers ro);
+	void XORI		(registers r, int number);
+	void NOT		(registers r);
+	void MOV		(registers ri, registers ro, int number);
+	void ADDD		(registers ri, registers ro, int number);
+	void SUBD		(registers ri, registers ro, int number);
+	void MULD		(registers ri, registers ro, int number);
+	void DIVD		(registers ri, registers ro, int number);
+	void ITOD		(registers ri, registers ro, int number);
+	void DTOI		(registers ri, registers ro, int number);
+	void PUSH		(registers r, int number);
+	void POP		(registers r, int number);
+	void CALL		(registers ri, registers ro, int number);
+	void CALLI		(registers r, unsigned int number);
+	void RET		(registers r, int number);
+	void CMP		(registers ri, registers ro, int number);
+	void CMPI		(registers r, int number);
+	void CMPD		(registers ri, registers ro, int number);
+	void JMP		(registers r, unsigned int number);
+	void JNE		(registers r, unsigned int number);
+	void JEQ		(registers r, unsigned int number);
+	void JLE		(registers r, unsigned int number);
+	void JL			(registers r, unsigned int number);
+	void JGE		(registers r, unsigned int number);
+	void JG			(registers r, unsigned int number);
+	void LOAD		(registers r, unsigned int number);
+	void STORE		(registers r, unsigned int number);
+	void LOAD2		(registers r, unsigned int number);
+	void STORE2		(registers r, unsigned int number);
+	void LOADR		(registers ri, registers ro, int number);
+	void STORER		(registers ri, registers ro, int number);
+	void LOADR2		(registers r, unsigned int number);
+	void STORER2	(registers ri, registers ro, int number);
 };
 
 void normalize_float(double number, double* mantiss, int* n)
@@ -233,13 +236,13 @@ void normalize_float(double number, double* mantiss, int* n)
 	*n = i;
 }
 
-FUPM_CPU::FUPM_CPU(string filename)
+FUPM_CPU::FUPM_CPU()
 {
 	running = false;
 	commands = nullptr;
 	amount_of_commands = 0;
 	amount_of_labels = 0;
-	
+	for (int i = 0; i < r15; i++) Registers[i] = 0;
 	//начать выполнение файла
 }
 
@@ -249,8 +252,11 @@ FUPM_CPU::~FUPM_CPU()
 	free(labels);
 }
 
-void FUPM_CPU::dump(string output_filename)
+void FUPM_CPU::dump()
 {
+	cout << "FUPM_CPU dump.\n{\n	Stack (" << Registers[r14] << "):\n	{\n";
+	for (int i = 0; i < Registers[r14]; i++) cout << "		Stack[" << i << "] = " << Stack[i] << endl;
+	cout << "	}\n}\n";
 	
 }
 
@@ -297,13 +303,19 @@ void FUPM_CPU::MULI		(registers r, int number)
 }
 void FUPM_CPU::DIV		(registers ri, registers ro)
 {
-	long dividend = Registers[ri] + (Registers[ri+1] >> 32);
+	long dividend = Registers[ri+1];
+	dividend = dividend >> 32;
+	dividend += Registers[ri];
+	
 	Registers[ri] = dividend / Registers[ro];
 	Registers[ri+1] = dividend % Registers[ro];
 }
 void FUPM_CPU::DIVI		(registers r, int number)
 {
-	long dividend = Registers[r] + (Registers[r+1] >> 32);
+	long dividend = Registers[r+1];
+	dividend = dividend >> 32;
+	dividend += Registers[r];
+	
 	Registers[r] = dividend / number;
 	Registers[r+1] = dividend % number;
 }
@@ -329,11 +341,11 @@ void FUPM_CPU::SHRI		(registers r, int number)
 }
 void FUPM_CPU::AND		(registers ri, registers ro)
 {
-	Registers[ri] &&= Registers[ro];
+	Registers[ri] &= Registers[ro];
 }
 void FUPM_CPU::ANDI		(registers r, int number)
 {
-	Registers[r] &&= number;
+	Registers[r] &= number;
 }
 void FUPM_CPU::OR			(registers ri, registers ro)
 {
@@ -361,45 +373,139 @@ void FUPM_CPU::MOV		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::ADDD		(registers ri, registers ro, int number)
 {
+	double d1 = (Registers[ri] & ((1 >> 22) - 1)) | Registers[ri+1];
+	int n1 = Registers[ri] & ((1 >> 11) - 1) >> 21;
+	if ((Registers[ri] & (1 >> 31)) == 1)
+		d1 = -d1;
+	if (n1 < 0)
+		for (int i = 0; i < n1; i++)
+			d1 /= 2;
+	else if (n1 > 0)
+		for (int i = 0; i < n1; i++)
+			d1 *= 2;
+	
+	double d2 = (Registers[ro] & ((1 >> 22) - 1)) | Registers[ro+1];
+	int n2 = Registers[ro] & ((1 >> 11) - 1) >> 21;
+	if ((Registers[ro] & (1 >> 31)) == 1)
+		d2 = -d2;
+	if (n2 < 0)
+		for (int i = 0; i < n2; i++)
+			d2 /= 2;
+	else if (n2 > 0)
+		for (int i = 0; i < n2; i++)
+			d2 *= 2;
+	
 	
 }
 void FUPM_CPU::SUBD		(registers ri, registers ro, int number)
 {
-	Registers[ri] -= Registers[ro];
-	Registers[ri+1] -= Registers[ro+1];
-	if (Registers[ri+1] < 0)
-	{
-		Registers[ri]--;
-		Registers[ri+1] += 1 >> 32;
-	}
+	
 }
 void FUPM_CPU::MULD		(registers ri, registers ro, int number)
 {
-	Registers[ri] = Registers[ro]*Registers[ri] + Registers[ri]*(Registers[ro+1] << sizeof()	
+	
 }
-void FUPM_CPU::DIVD		(registers ri, registers ro, int number);
-void FUPM_CPU::ITOD		(registers ri, registers ro, int number);
-void FUPM_CPU::DTOI		(registers ri, registers ro, int number);
-void FUPM_CPU::PUSH		(registers r, int number);
-void FUPM_CPU::POP		(registers r, int number);
-void FUPM_CPU::CALL		(registers ri, registers ro, int number);
-void FUPM_CPU::CALLI		(registers r, unsigned int number);
-void FUPM_CPU::RET		(registers r, int number);
-void FUPM_CPU::CMP		(registers ri, registers ro, int number);
-void FUPM_CPU::CMPI		(registers r, int number);
-void FUPM_CPU::CMPD		(registers ri, registers ro, int number);
-void FUPM_CPU::JMP		(registers r, unsigned int number);
-void FUPM_CPU::JNE		(registers r, unsigned int number);
-void FUPM_CPU::JEQ		(registers r, unsigned int number);
-void FUPM_CPU::JLE		(registers r, unsigned int number);
-void FUPM_CPU::JL			(registers r, unsigned int number);
-void FUPM_CPU::JGE		(registers r, unsigned int number);
-void FUPM_CPU::JG			(registers r, unsigned int number);
-void FUPM_CPU::LOAD		(registers r, unsigned int number);
-void FUPM_CPU::STORE		(registers r, unsigned int number);
-void FUPM_CPU::LOAD2		(registers r, unsigned int number);
-void FUPM_CPU::STORE2		(registers r, unsigned int number);
-void FUPM_CPU::LOADR		(registers ri, registers ro, int number);
-void FUPM_CPU::STORER		(registers ri, registers ro, int number);
-void FUPM_CPU::LOADR2		(registers r, unsigned int number);
-void FUPM_CPU::STORER2	(registers ri, registers ro, int number);
+void FUPM_CPU::DIVD		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::ITOD		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::DTOI		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::PUSH		(registers r, int number)
+{
+	Stack[Registers[r14]++] = Registers[r] + number;
+}
+void FUPM_CPU::POP		(registers r, int number)
+{
+	Registers[r] = Stack[Registers[r14]-- - 1] + number;
+}
+void FUPM_CPU::CALL		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::CALLI		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::RET		(registers r, int number)
+{
+	
+}
+void FUPM_CPU::CMP		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::CMPI		(registers r, int number)
+{
+	
+}
+void FUPM_CPU::CMPD		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::JMP		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::JNE		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::JEQ		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::JLE		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::JL			(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::JGE		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::JG			(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::LOAD		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::STORE		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::LOAD2		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::STORE2		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::LOADR		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::STORER		(registers ri, registers ro, int number)
+{
+	
+}
+void FUPM_CPU::LOADR2		(registers r, unsigned int number)
+{
+	
+}
+void FUPM_CPU::STORER2	(registers ri, registers ro, int number)
+{
+	
+}

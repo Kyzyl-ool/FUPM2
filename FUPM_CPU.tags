@@ -1,0 +1,154 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ADD	./fupm_cpu.cpp	178;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+ADD	./fupm_cpu.cpp	275;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+ADDD	./fupm_cpu.cpp	199;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+ADDD	./fupm_cpu.cpp	374;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+ADDI	./fupm_cpu.cpp	179;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+ADDI	./fupm_cpu.cpp	279;"	function	class:FUPM_CPU	signature:(registers r, int number)
+amount_of_commands	./fupm_cpu.cpp	167;"	member	class:FUPM_CPU	file:
+amount_of_labels	./fupm_cpu.cpp	168;"	member	class:FUPM_CPU	file:
+AND	./fupm_cpu.cpp	191;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro)
+AND	./fupm_cpu.cpp	342;"	function	class:FUPM_CPU	signature:(registers ri, registers ro)
+ANDI	./fupm_cpu.cpp	192;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+ANDI	./fupm_cpu.cpp	346;"	function	class:FUPM_CPU	signature:(registers r, int number)
+CALL	./fupm_cpu.cpp	207;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+CALL	./fupm_cpu.cpp	428;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+CALLI	./fupm_cpu.cpp	208;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+CALLI	./fupm_cpu.cpp	432;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+CMP	./fupm_cpu.cpp	210;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+CMP	./fupm_cpu.cpp	440;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+CMPD	./fupm_cpu.cpp	212;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+CMPD	./fupm_cpu.cpp	448;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+CMPI	./fupm_cpu.cpp	211;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+CMPI	./fupm_cpu.cpp	444;"	function	class:FUPM_CPU	signature:(registers r, int number)
+commands	./fupm_cpu.cpp	167;"	member	class:FUPM_CPU	file:
+data	./fupm_cpu.cpp	23;"	struct	file:
+DIV	./fupm_cpu.cpp	184;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro)
+DIV	./fupm_cpu.cpp	304;"	function	class:FUPM_CPU	signature:(registers ri, registers ro)
+DIVD	./fupm_cpu.cpp	202;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+DIVD	./fupm_cpu.cpp	408;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+DIVI	./fupm_cpu.cpp	185;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+DIVI	./fupm_cpu.cpp	313;"	function	class:FUPM_CPU	signature:(registers r, int number)
+DTOI	./fupm_cpu.cpp	204;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+DTOI	./fupm_cpu.cpp	416;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+dump	./fupm_cpu.cpp	174;"	prototype	class:FUPM_CPU	file:	signature:()
+dump	./fupm_cpu.cpp	255;"	function	class:FUPM_CPU	signature:()
+FUPM_CPU	./fupm_cpu.cpp	161;"	class	file:
+FUPM_CPU	./fupm_cpu.cpp	172;"	prototype	class:FUPM_CPU	file:	signature:()
+FUPM_CPU	./fupm_cpu.cpp	239;"	function	class:FUPM_CPU	signature:()
+HALT	./fupm_cpu.cpp	176;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+HALT	./fupm_cpu.cpp	263;"	function	class:FUPM_CPU	signature:(registers r, int number)
+ITOD	./fupm_cpu.cpp	203;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+ITOD	./fupm_cpu.cpp	412;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+JEQ	./fupm_cpu.cpp	215;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+JEQ	./fupm_cpu.cpp	460;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+JG	./fupm_cpu.cpp	219;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+JG	./fupm_cpu.cpp	476;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+JGE	./fupm_cpu.cpp	218;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+JGE	./fupm_cpu.cpp	472;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+JL	./fupm_cpu.cpp	217;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+JL	./fupm_cpu.cpp	468;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+JLE	./fupm_cpu.cpp	216;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+JLE	./fupm_cpu.cpp	464;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+JMP	./fupm_cpu.cpp	213;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+JMP	./fupm_cpu.cpp	452;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+JNE	./fupm_cpu.cpp	214;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+JNE	./fupm_cpu.cpp	456;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+labels	./fupm_cpu.cpp	168;"	member	class:FUPM_CPU	file:
+LC	./fupm_cpu.cpp	186;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+LC	./fupm_cpu.cpp	322;"	function	class:FUPM_CPU	signature:(registers r, int number)
+LOAD	./fupm_cpu.cpp	220;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+LOAD	./fupm_cpu.cpp	480;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+LOAD2	./fupm_cpu.cpp	222;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+LOAD2	./fupm_cpu.cpp	488;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+LOADR	./fupm_cpu.cpp	224;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+LOADR	./fupm_cpu.cpp	496;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+LOADR2	./fupm_cpu.cpp	226;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+LOADR2	./fupm_cpu.cpp	504;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+m	./fupm_cpu.cpp	27;"	member	struct:data	file:
+main	./cpu.cpp	10;"	function	signature:()
+main	./TEST.c	3;"	function
+mode	./fupm_cpu.cpp	16;"	enum	file:
+MOV	./fupm_cpu.cpp	198;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+MOV	./fupm_cpu.cpp	370;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+MUL	./fupm_cpu.cpp	182;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro)
+MUL	./fupm_cpu.cpp	291;"	function	class:FUPM_CPU	signature:(registers ri, registers ro)
+MULD	./fupm_cpu.cpp	201;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+MULD	./fupm_cpu.cpp	404;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+MULI	./fupm_cpu.cpp	183;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+MULI	./fupm_cpu.cpp	298;"	function	class:FUPM_CPU	signature:(registers r, int number)
+name	./fupm_cpu.cpp	26;"	member	struct:data	file:
+normalize_float	./fupm_cpu.cpp	230;"	function	signature:(double number, double* mantiss, int* n)
+NOT	./fupm_cpu.cpp	197;"	prototype	class:FUPM_CPU	file:	signature:(registers r)
+NOT	./fupm_cpu.cpp	366;"	function	class:FUPM_CPU	signature:(registers r)
+ops	./fupm_cpu.cpp	50;"	variable
+OR	./fupm_cpu.cpp	193;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro)
+OR	./fupm_cpu.cpp	350;"	function	class:FUPM_CPU	signature:(registers ri, registers ro)
+ORI	./fupm_cpu.cpp	194;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+ORI	./fupm_cpu.cpp	354;"	function	class:FUPM_CPU	signature:(registers r, int number)
+POP	./fupm_cpu.cpp	206;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+POP	./fupm_cpu.cpp	424;"	function	class:FUPM_CPU	signature:(registers r, int number)
+PUSH	./fupm_cpu.cpp	205;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+PUSH	./fupm_cpu.cpp	420;"	function	class:FUPM_CPU	signature:(registers r, int number)
+r0	./fupm_cpu.cpp	32;"	enumerator	enum:registers	file:
+r1	./fupm_cpu.cpp	33;"	enumerator	enum:registers	file:
+r10	./fupm_cpu.cpp	42;"	enumerator	enum:registers	file:
+r11	./fupm_cpu.cpp	43;"	enumerator	enum:registers	file:
+r12	./fupm_cpu.cpp	44;"	enumerator	enum:registers	file:
+r13	./fupm_cpu.cpp	45;"	enumerator	enum:registers	file:
+r14	./fupm_cpu.cpp	46;"	enumerator	enum:registers	file:
+r15	./fupm_cpu.cpp	47;"	enumerator	enum:registers	file:
+r2	./fupm_cpu.cpp	34;"	enumerator	enum:registers	file:
+r3	./fupm_cpu.cpp	35;"	enumerator	enum:registers	file:
+r4	./fupm_cpu.cpp	36;"	enumerator	enum:registers	file:
+r5	./fupm_cpu.cpp	37;"	enumerator	enum:registers	file:
+r6	./fupm_cpu.cpp	38;"	enumerator	enum:registers	file:
+r7	./fupm_cpu.cpp	39;"	enumerator	enum:registers	file:
+r8	./fupm_cpu.cpp	40;"	enumerator	enum:registers	file:
+r9	./fupm_cpu.cpp	41;"	enumerator	enum:registers	file:
+Registers	./fupm_cpu.cpp	165;"	member	class:FUPM_CPU	file:
+registers	./fupm_cpu.cpp	30;"	enum	file:
+RET	./fupm_cpu.cpp	209;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+RET	./fupm_cpu.cpp	436;"	function	class:FUPM_CPU	signature:(registers r, int number)
+RI	./fupm_cpu.cpp	19;"	enumerator	enum:mode	file:
+RM	./fupm_cpu.cpp	20;"	enumerator	enum:mode	file:
+RR	./fupm_cpu.cpp	18;"	enumerator	enum:mode	file:
+running	./fupm_cpu.cpp	164;"	member	class:FUPM_CPU	file:
+SHL	./fupm_cpu.cpp	187;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro)
+SHL	./fupm_cpu.cpp	326;"	function	class:FUPM_CPU	signature:(registers ri, registers ro)
+SHLI	./fupm_cpu.cpp	188;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+SHLI	./fupm_cpu.cpp	330;"	function	class:FUPM_CPU	signature:(registers r, int number)
+SHR	./fupm_cpu.cpp	189;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro)
+SHR	./fupm_cpu.cpp	334;"	function	class:FUPM_CPU	signature:(registers ri, registers ro)
+SHRI	./fupm_cpu.cpp	190;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+SHRI	./fupm_cpu.cpp	338;"	function	class:FUPM_CPU	signature:(registers r, int number)
+Stack	./fupm_cpu.cpp	166;"	member	class:FUPM_CPU	file:
+STACK_SIZE	./fupm_cpu.cpp	8;"	macro	file:
+STORE	./fupm_cpu.cpp	221;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+STORE	./fupm_cpu.cpp	484;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+STORE2	./fupm_cpu.cpp	223;"	prototype	class:FUPM_CPU	file:	signature:(registers r, unsigned int number)
+STORE2	./fupm_cpu.cpp	492;"	function	class:FUPM_CPU	signature:(registers r, unsigned int number)
+STORER	./fupm_cpu.cpp	225;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+STORER	./fupm_cpu.cpp	500;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+STORER2	./fupm_cpu.cpp	227;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+STORER2	./fupm_cpu.cpp	508;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+SUB	./fupm_cpu.cpp	180;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+SUB	./fupm_cpu.cpp	283;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+SUBD	./fupm_cpu.cpp	200;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro, int number)
+SUBD	./fupm_cpu.cpp	400;"	function	class:FUPM_CPU	signature:(registers ri, registers ro, int number)
+SUBI	./fupm_cpu.cpp	181;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+SUBI	./fupm_cpu.cpp	287;"	function	class:FUPM_CPU	signature:(registers r, int number)
+SYSCALL	./fupm_cpu.cpp	177;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+SYSCALL	./fupm_cpu.cpp	269;"	function	class:FUPM_CPU	signature:(registers r, int number)
+value	./fupm_cpu.cpp	25;"	member	struct:data	file:
+XOR	./fupm_cpu.cpp	195;"	prototype	class:FUPM_CPU	file:	signature:(registers ri, registers ro)
+XOR	./fupm_cpu.cpp	358;"	function	class:FUPM_CPU	signature:(registers ri, registers ro)
+XORI	./fupm_cpu.cpp	196;"	prototype	class:FUPM_CPU	file:	signature:(registers r, int number)
+XORI	./fupm_cpu.cpp	362;"	function	class:FUPM_CPU	signature:(registers r, int number)
+~FUPM_CPU	./fupm_cpu.cpp	173;"	prototype	class:FUPM_CPU	file:	signature:()
+~FUPM_CPU	./fupm_cpu.cpp	249;"	function	class:FUPM_CPU	signature:()
