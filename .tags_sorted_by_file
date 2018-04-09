@@ -1,0 +1,105 @@
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+main	TEST.c	/^int main()$/;"	f
+main	cpu.cpp	/^int main()$/;"	f
+ADD	fupm_cpu.cpp	/^void FUPM_CPU::ADD		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+ADDD	fupm_cpu.cpp	/^void FUPM_CPU::ADDD		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+ADDI	fupm_cpu.cpp	/^void FUPM_CPU::ADDI		(registers r, int number)$/;"	f	class:FUPM_CPU
+AND	fupm_cpu.cpp	/^void FUPM_CPU::AND		(registers ri, registers ro)$/;"	f	class:FUPM_CPU
+ANDI	fupm_cpu.cpp	/^void FUPM_CPU::ANDI		(registers r, int number)$/;"	f	class:FUPM_CPU
+CALL	fupm_cpu.cpp	/^void FUPM_CPU::CALL		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+CALLI	fupm_cpu.cpp	/^void FUPM_CPU::CALLI		(registers r, unsigned int number)$/;"	f	class:FUPM_CPU
+CMP	fupm_cpu.cpp	/^void FUPM_CPU::CMP		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+CMPD	fupm_cpu.cpp	/^void FUPM_CPU::CMPD		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+CMPI	fupm_cpu.cpp	/^void FUPM_CPU::CMPI		(registers r, int number)$/;"	f	class:FUPM_CPU
+DEFAULT_MEMORY_SIZE	fupm_cpu.cpp	/^#define DEFAULT_MEMORY_SIZE /;"	d	file:
+DIV	fupm_cpu.cpp	/^void FUPM_CPU::DIV		(registers ri, registers ro)$/;"	f	class:FUPM_CPU
+DIVD	fupm_cpu.cpp	/^void FUPM_CPU::DIVD		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+DIVI	fupm_cpu.cpp	/^void FUPM_CPU::DIVI		(registers r, int number)$/;"	f	class:FUPM_CPU
+DTOI	fupm_cpu.cpp	/^void FUPM_CPU::DTOI		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+FUPM_CPU	fupm_cpu.cpp	/^FUPM_CPU::FUPM_CPU(string filename):$/;"	f	class:FUPM_CPU
+FUPM_CPU	fupm_cpu.cpp	/^class FUPM_CPU$/;"	c	file:
+Flags	fupm_cpu.cpp	/^	char Flags; \/\/ 3 - ne, 2 - e, 1 - g, 0 - l$/;"	m	class:FUPM_CPU	file:
+HALT	fupm_cpu.cpp	/^void FUPM_CPU::HALT(registers r, int number)$/;"	f	class:FUPM_CPU
+ITOD	fupm_cpu.cpp	/^void FUPM_CPU::ITOD		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+JEQ	fupm_cpu.cpp	/^void FUPM_CPU::JEQ		(unsigned int number)$/;"	f	class:FUPM_CPU
+JG	fupm_cpu.cpp	/^void FUPM_CPU::JG			(unsigned int number)$/;"	f	class:FUPM_CPU
+JGE	fupm_cpu.cpp	/^void FUPM_CPU::JGE		(unsigned int number)$/;"	f	class:FUPM_CPU
+JL	fupm_cpu.cpp	/^void FUPM_CPU::JL			(unsigned int number)$/;"	f	class:FUPM_CPU
+JLE	fupm_cpu.cpp	/^void FUPM_CPU::JLE		(unsigned int number)$/;"	f	class:FUPM_CPU
+JMP	fupm_cpu.cpp	/^void FUPM_CPU::JMP		(unsigned int number)$/;"	f	class:FUPM_CPU
+JNE	fupm_cpu.cpp	/^void FUPM_CPU::JNE		(unsigned int number)$/;"	f	class:FUPM_CPU
+LC	fupm_cpu.cpp	/^void FUPM_CPU::LC			(registers r, int number)$/;"	f	class:FUPM_CPU
+LOAD	fupm_cpu.cpp	/^void FUPM_CPU::LOAD		(registers r, unsigned int number)$/;"	f	class:FUPM_CPU
+LOAD2	fupm_cpu.cpp	/^void FUPM_CPU::LOAD2		(registers r, unsigned int number)$/;"	f	class:FUPM_CPU
+LOADR	fupm_cpu.cpp	/^void FUPM_CPU::LOADR		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+LOADR2	fupm_cpu.cpp	/^void FUPM_CPU::LOADR2		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+MOV	fupm_cpu.cpp	/^void FUPM_CPU::MOV		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+MUL	fupm_cpu.cpp	/^void FUPM_CPU::MUL		(registers ri, registers ro)$/;"	f	class:FUPM_CPU
+MULD	fupm_cpu.cpp	/^void FUPM_CPU::MULD		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+MULI	fupm_cpu.cpp	/^void FUPM_CPU::MULI		(registers r, int number)$/;"	f	class:FUPM_CPU
+NOT	fupm_cpu.cpp	/^void FUPM_CPU::NOT		(registers r)$/;"	f	class:FUPM_CPU
+OR	fupm_cpu.cpp	/^void FUPM_CPU::OR			(registers ri, registers ro)$/;"	f	class:FUPM_CPU
+ORI	fupm_cpu.cpp	/^void FUPM_CPU::ORI		(registers r, int number)$/;"	f	class:FUPM_CPU
+POP	fupm_cpu.cpp	/^void FUPM_CPU::POP		(registers r, int number)$/;"	f	class:FUPM_CPU
+PUSH	fupm_cpu.cpp	/^void FUPM_CPU::PUSH		(registers r, int number)$/;"	f	class:FUPM_CPU
+RET	fupm_cpu.cpp	/^void FUPM_CPU::RET		(registers r, int number)$/;"	f	class:FUPM_CPU
+RI	fupm_cpu.cpp	/^	RI,$/;"	e	enum:mode	file:
+RM	fupm_cpu.cpp	/^	RM$/;"	e	enum:mode	file:
+RR	fupm_cpu.cpp	/^	RR,$/;"	e	enum:mode	file:
+Registers	fupm_cpu.cpp	/^	int Registers[16];$/;"	m	class:FUPM_CPU	file:
+SHL	fupm_cpu.cpp	/^void FUPM_CPU::SHL		(registers ri, registers ro)$/;"	f	class:FUPM_CPU
+SHLI	fupm_cpu.cpp	/^void FUPM_CPU::SHLI		(registers r, int number)$/;"	f	class:FUPM_CPU
+SHR	fupm_cpu.cpp	/^void FUPM_CPU::SHR		(registers ri, registers ro)$/;"	f	class:FUPM_CPU
+SHRI	fupm_cpu.cpp	/^void FUPM_CPU::SHRI		(registers r, int number)$/;"	f	class:FUPM_CPU
+STACK_SIZE	fupm_cpu.cpp	/^#define STACK_SIZE /;"	d	file:
+STORE	fupm_cpu.cpp	/^void FUPM_CPU::STORE		(registers r, unsigned int number)$/;"	f	class:FUPM_CPU
+STORE2	fupm_cpu.cpp	/^void FUPM_CPU::STORE2		(registers r, unsigned int number)$/;"	f	class:FUPM_CPU
+STORER	fupm_cpu.cpp	/^void FUPM_CPU::STORER		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+STORER2	fupm_cpu.cpp	/^void FUPM_CPU::STORER2	(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+SUB	fupm_cpu.cpp	/^void FUPM_CPU::SUB		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+SUBD	fupm_cpu.cpp	/^void FUPM_CPU::SUBD		(registers ri, registers ro, int number)$/;"	f	class:FUPM_CPU
+SUBI	fupm_cpu.cpp	/^void FUPM_CPU::SUBI		(registers r, int number)$/;"	f	class:FUPM_CPU
+SYSCALL	fupm_cpu.cpp	/^void FUPM_CPU::SYSCALL(registers r, int number)$/;"	f	class:FUPM_CPU
+Stack	fupm_cpu.cpp	/^	int Stack[STACK_SIZE];$/;"	m	class:FUPM_CPU	file:
+Stack_addr	fupm_cpu.cpp	/^	int Stack_addr[STACK_SIZE];	unsigned int stack_addr_count;$/;"	m	class:FUPM_CPU	file:
+XOR	fupm_cpu.cpp	/^void FUPM_CPU::XOR		(registers ri, registers ro)$/;"	f	class:FUPM_CPU
+XORI	fupm_cpu.cpp	/^void FUPM_CPU::XORI		(registers r, int number)$/;"	f	class:FUPM_CPU
+amount_of_commands	fupm_cpu.cpp	/^	int* commands; 				unsigned int amount_of_commands;$/;"	m	class:FUPM_CPU	file:
+amount_of_labels	fupm_cpu.cpp	/^	int* labels; 				unsigned int amount_of_labels;$/;"	m	class:FUPM_CPU	file:
+commands	fupm_cpu.cpp	/^	int* commands; 				unsigned int amount_of_commands;$/;"	m	class:FUPM_CPU	file:
+data	fupm_cpu.cpp	/^struct data$/;"	s	file:
+dump	fupm_cpu.cpp	/^void FUPM_CPU::dump()$/;"	f	class:FUPM_CPU
+labels	fupm_cpu.cpp	/^	int* labels; 				unsigned int amount_of_labels;$/;"	m	class:FUPM_CPU	file:
+m	fupm_cpu.cpp	/^	mode m;$/;"	m	struct:data	file:
+memory	fupm_cpu.cpp	/^	int* memory;				unsigned int memory_size;$/;"	m	class:FUPM_CPU	file:
+memory_size	fupm_cpu.cpp	/^	int* memory;				unsigned int memory_size;$/;"	m	class:FUPM_CPU	file:
+mode	fupm_cpu.cpp	/^enum mode$/;"	g	file:
+name	fupm_cpu.cpp	/^	string name;$/;"	m	struct:data	file:
+normalize_float	fupm_cpu.cpp	/^void normalize_float(double number, double* mantiss, int* n)$/;"	f
+ops	fupm_cpu.cpp	/^data ops[] =$/;"	v
+r0	fupm_cpu.cpp	/^	r0 = 0,$/;"	e	enum:registers	file:
+r1	fupm_cpu.cpp	/^	r1,$/;"	e	enum:registers	file:
+r10	fupm_cpu.cpp	/^	r10,$/;"	e	enum:registers	file:
+r11	fupm_cpu.cpp	/^	r11,$/;"	e	enum:registers	file:
+r12	fupm_cpu.cpp	/^	r12,$/;"	e	enum:registers	file:
+r13	fupm_cpu.cpp	/^	r13,$/;"	e	enum:registers	file:
+r14	fupm_cpu.cpp	/^	r14,$/;"	e	enum:registers	file:
+r15	fupm_cpu.cpp	/^	r15$/;"	e	enum:registers	file:
+r2	fupm_cpu.cpp	/^	r2,$/;"	e	enum:registers	file:
+r3	fupm_cpu.cpp	/^	r3,$/;"	e	enum:registers	file:
+r4	fupm_cpu.cpp	/^	r4,$/;"	e	enum:registers	file:
+r5	fupm_cpu.cpp	/^	r5,$/;"	e	enum:registers	file:
+r6	fupm_cpu.cpp	/^	r6,$/;"	e	enum:registers	file:
+r7	fupm_cpu.cpp	/^	r7,$/;"	e	enum:registers	file:
+r8	fupm_cpu.cpp	/^	r8,$/;"	e	enum:registers	file:
+r9	fupm_cpu.cpp	/^	r9,$/;"	e	enum:registers	file:
+registers	fupm_cpu.cpp	/^enum registers$/;"	g	file:
+running	fupm_cpu.cpp	/^	bool running;$/;"	m	class:FUPM_CPU	file:
+stack_addr_count	fupm_cpu.cpp	/^	int Stack_addr[STACK_SIZE];	unsigned int stack_addr_count;$/;"	m	class:FUPM_CPU	file:
+value	fupm_cpu.cpp	/^	int value;$/;"	m	struct:data	file:
+~FUPM_CPU	fupm_cpu.cpp	/^FUPM_CPU::~FUPM_CPU()$/;"	f	class:FUPM_CPU
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/

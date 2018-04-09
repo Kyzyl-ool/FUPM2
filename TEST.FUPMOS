@@ -1,0 +1,3 @@
+push r0 100
+
+halt r0 0
