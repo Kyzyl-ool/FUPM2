@@ -13,8 +13,9 @@ int main()
 	//~ FUPM_CPU cpu("test.fupm");
 	//Выполнить машинный код
 	FUPM_CPU Test;
-	Test.run("TEST.FUPMOS");
-	
+	Test.load_from_file("TEST.FUPMOS");
+	Test.run();
+
 	Test.dump();
 	return 0;
 }

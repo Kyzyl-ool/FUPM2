@@ -18,7 +18,7 @@ using std::map;
 
 map <string, int> cmds;
 map <int, int> cmd_types;
-
+map <string, int> labels;
 
 enum mode
 {
@@ -194,15 +194,16 @@ private:
 	int Registers[16];
 	char Flags; // 3 - ne, 2 - e, 1 - g, 0 - l
 	int Stack[STACK_SIZE];
-	int* labels; 				unsigned int amount_of_labels;
 	int* memory;				unsigned int memory_size;
+	int* commands;				unsigned int amount_of_commands;
 	
 	
 public:
 	FUPM_CPU();
 	~FUPM_CPU();
 	void dump();
-	void run(string filename);
+	void load_from_file(string filename);
+	void run();
 	
 	void HALT		(registers r, int number);
 	void SYSCALL	(registers r, int number);
@@ -270,8 +271,7 @@ void normalize_float(double number, double* mantiss, int* n)
 FUPM_CPU::FUPM_CPU():
 running(false),
 Flags(0),
-labels(nullptr),
-amount_of_labels(0)
+amount_of_commands(0)
 {
 	for (int i = 0; i < AMOUNT_OF_CPU_COMMANDS; ++i)
 	{
@@ -307,17 +307,28 @@ amount_of_labels(0)
 
 FUPM_CPU::~FUPM_CPU()
 {
-	free(labels);
 	free(memory);
+	free(commands);
 }
 
 void FUPM_CPU::dump()
 {
-	cout << "FUPM_CPU ("; if (running) cout << "running"; else cout << "not running"; cout << ") dump.\n{\n	Stack (" << Registers[r14] << "):\n	{\n";
+	cout << "DUMP: FUPM_CPU ("; if (running) cout << "running"; else cout << "not running"; cout << ")\n{\n	Stack (" << Registers[r14] << "):\n	{\n";
+	
 	for (int i = 0; i < Registers[r14]; i++) cout << "		Stack[" << i << "] = " << Stack[i] << endl;
+	
 	cout << "	}\n	Registers:\n	{\n";
 	for (int i = 0; i <= r15; i++) cout << "		r" << i << " = " << Registers[i] << endl;
 	cout << "	}\n";
+	
+	cout << "	amount_of_commands = " << amount_of_commands << endl;
+	cout << "	commands:\n 	[";
+	for (int i = 0; i < amount_of_commands; ++i)
+	{
+		cout << commands[i] << ' ';
+	}
+	cout << "]\n";
+
 	cout << "	Flags:\n	{\n";
 	if (Flags & 0b1000)
 		cout << "		ne";
@@ -328,10 +339,8 @@ void FUPM_CPU::dump()
 	if (Flags & 0b0001)
 		cout << "		l";
 	cout << "	}\n";
-	
-	cout << "	Labels (" << amount_of_labels << "):\n	{\n";
-	for (int i = 0; i < amount_of_labels; i++) cout << "		labels[" << i << "] = " << labels[i] << endl;
-	cout << "	}\n";
+
+	cout << "}\n\n";
 }
 
 void FUPM_CPU::HALT(registers r, int number)
@@ -501,18 +510,18 @@ void FUPM_CPU::POP		(registers r, int number)
 }
 void FUPM_CPU::CALL		(registers ri, registers ro, int number)
 {
-	Stack[Registers[r14]++] = Registers[r15] + 1;
+	Stack[Registers[r14]++] = Registers[r15];
 	Registers[r15] = Registers[ro] + number;
 }
 void FUPM_CPU::CALLI		(registers r, unsigned int number)
 {
-	Stack[Registers[r14]++] = Registers[r15] + 1;
+	Stack[Registers[r14]++] = Registers[r15];
 	Registers[r15] = number;
 }
 void FUPM_CPU::RET		(registers r, int number)
 {
 	Registers[r15] = Stack[Registers[r14] - 1] + number;
-	Stack[Registers[r14]] = 0;
+	Stack[Registers[r14]--] = 0;
 }
 
 void FUPM_CPU::CMP		(registers ri, registers ro, int number)
@@ -608,103 +617,240 @@ void FUPM_CPU::STORER2	(registers ri, registers ro, int number)
 	memory[ro+1] = Registers[ri+1] + number;
 }
 
-void FUPM_CPU::run(string filename)
+void FUPM_CPU::load_from_file(string filename)
 {
 	running = true;
 	std::ifstream fin(filename);
 	assert("FILE NOT EXISTS" && fin);
-	int number;
-	unsigned int unumber;
-	enum registers ri, ro, r;
 	string tmp, cmd;
 
+	int count = 0;
 	while (!fin.eof())
 	{
+		fin >> tmp;
+		if (tmp.find(':') != -1)
+		{
+			labels[tmp] = count;
+			fin >> tmp;
+		}
 
-		fin >> cmd;
-		switch (cmd_types[cmds[cmd]])
+		switch (cmd_types[cmds[tmp]])
 		{
 			case RI:
 			{
+				count += 3;
 				fin >> tmp;
-				r = reg_number[tmp];
-				fin >> number;
+				fin >> tmp;
 				break;
 			}
 			case RR:
 			{
+				count += 4;
 				fin >> tmp;
-				ri = reg_number[tmp];
 				fin >> tmp;
-				ro = reg_number[tmp];
-				fin >> number;
+				fin >> tmp;
 				break;
 			}
 			case RM:
 			{
+				count += 3;
 				fin >> tmp;
-				r = reg_number[tmp];
-				fin >> unumber;
+				fin >> tmp;
+				break;
+			}
+			default: assert(!"FATAL ERROR");
+		}
+	}
+	fin.close();
+	fin.open(filename);
+
+	while(!fin.eof())
+	{
+		fin >> tmp;
+		if (tmp.find(':') != -1)
+		{
+			fin >> tmp;
+		}
+
+		switch (cmd_types[cmds[cmd]])
+		{
+			case RI:
+			{
+				amount_of_commands += 3;
+				fin >> tmp;
+				fin >> tmp;
+				break;
+			}
+			case RR:
+			{
+				amount_of_commands += 4;
+				fin >> tmp;
+				fin >> tmp;
+				fin >> tmp;
+				break;
+			}
+			case RM:
+			{
+				amount_of_commands += 3;
+				fin >> tmp;
+				fin >> tmp;
+				break;
+			}
+			default: assert(!"FATAL ERROR");
+		}
+	}
+
+	commands = (int* )calloc(amount_of_commands, sizeof(int));
+
+	
+	fin.close();
+	fin.open(filename);
+	
+	count = 0;
+	while(!fin.eof())
+	{
+		fin >> tmp;
+		if (tmp.find(':') != -1);
+			// commands[count++] = labels[tmp];
+		else
+		{
+			switch (cmd_types[cmds[tmp]])
+			{
+				case RI:
+				{
+					commands[count++] = cmds[tmp];
+					fin >> tmp;
+					commands[count++] = reg_number[tmp];
+					fin >> tmp;
+					if (labels[tmp] != 0)
+						commands[count++] = labels[tmp];
+					else
+						commands[count++] = std::stoi(tmp);
+					break;
+				}
+				case RR:
+				{
+					commands[count++] = cmds[tmp];
+					fin >> tmp;
+					commands[count++] = reg_number[tmp];
+					fin >> tmp;
+					commands[count++] = reg_number[tmp];
+					fin >> tmp;
+					if (labels[tmp] != 0)
+						commands[count++] = labels[tmp];
+					else
+						commands[count++] = std::stoi(tmp);
+					break;
+				}
+				case RM:
+				{
+					commands[count++] = cmds[tmp];
+					fin >> tmp;
+					commands[count++] = reg_number[tmp];
+					fin >> tmp;
+					if (labels[tmp] != 0)
+						commands[count++] = labels[tmp];
+					else
+						commands[count++] = std::stoi(tmp);
+					break;
+				}
+				default: assert(!"FATAL ERROR");
+			}
+		}
+	}
+	fin.close();
+}
+
+void FUPM_CPU::run()
+{
+	registers r, ro, ri;
+	int number;
+	unsigned int unumber;
+	int cmd;
+	running = true;
+	
+	while (running)
+	{
+		cmd = commands[Registers[r15]++];
+		switch (cmd_types[cmd])
+		{
+			case RI:
+			{
+				r = (registers)commands[Registers[r15]++];
+				number = commands[Registers[r15]++];
+				break;
+			}
+			case RR:
+			{
+				ri = (registers)commands[Registers[r15]++];
+				ro = (registers)commands[Registers[r15]++];
+				number = (registers)commands[Registers[r15]++];
+				break;
+			}
+			case RM:
+			{
+				r = (registers)commands[Registers[r15]++];
+				unumber = (registers)commands[Registers[r15]++];
 				break;
 			}
 			default: assert(!"FATAL ERROR");
 		}
 
-		switch (cmds[cmd])
+		switch (cmd)
 		{
 			case 0:	    { HALT(r, number); break;}        
-            case 1:	    { SYSCALL(r, number); break;}        
-            case 2:	    { ADD(ri, ro, number); break;}        
-            case 3:	    { ADDI(r, number); break;}        
-            case 4:	    { SUB(ri, ro, number); break;}        
-            case 5:	    { SUBI(r, number); break;}        
-            case 6:	    { MUL(ri, ro); break;}        
-            case 7:	    { MULI(r, number); break;}        
-            case 8:	    { DIV(ri, ro); break;}        
-            case 9:	    { DIVI(r, number); break;}        
-            case 12:	{ LC(r, number); break;}        
-            case 13:	{ SHL(ri, ro); break;}       
-            case 14:	{ SHLI(r, number); break;}       
-            case 15:	{ SHR(ri, ro); break;}       
-            case 16:	{ SHRI(r, number); break;}       
-            case 17:	{ AND(ri, ro); break;}       
-            case 18:	{ ANDI(r, number); break;}       
-            case 19:	{ OR(ri, ro); break;}       
-            case 20:	{ ORI(r, number); break;}       
-            case 21:	{ XOR(ri, ro); break;}       
-            case 22:	{ XORI(r, number); break;}       
-            case 23:	{ NOT(r); break;}       
-            case 24:	{ MOV(ri, ro, number); break;}       
-	        case 32:	{ ADDD(ri, ro, number); break;}       
-            case 33:	{ SUBD(ri, ro, number); break;}       
-            case 34:	{ MULD(ri, ro, number); break;}       
-            case 35:	{ DIVD(ri, ro, number); break;}       
-            case 36:	{ ITOD(ri, ro, number); break;}       
-            case 37:	{ DTOI(ri, ro, number); break;}       
-            case 38:	{ PUSH(r, number); break;}       
-            case 39:	{ POP(r, number); break;}       
-            case 40:	{ CALL(ri, ro, number); break;}       
-            case 41:	{ CALLI(r, unumber); break;}       
-            case 42:	{ RET(r, number); break;}       
-            case 43:	{ CMP(ri, ro, number); break;}       
-            case 44:	{ CMPI(r, number); break;}       
-            case 45:	{ CMPD(ri, ro, number); break;}       
-            case 46:	{ JMP(unumber); break;}       
-            case 47:	{ JNE(unumber); break;}       
-            case 48:	{ JEQ(unumber); break;}       
-            case 49:	{ JLE(unumber); break;}       
-            case 50:	{ JL(unumber); break;}       
-            case 51:	{ JGE(unumber); break;}       
-            case 52:	{ JG(unumber); break;}       
-            case 64:	{ LOAD(r, unumber); break;}       
-            case 65:	{ STORE(r, unumber); break;}       
-            case 66:	{ LOAD2(r, unumber); break;}       
-            case 67:	{ STORE2(r, unumber); break;}       
-            case 68:	{ LOADR(ri, ro, number); break;}       
-            case 69:	{ LOADR2(ri, ro, number); break;}       
-            case 70:	{ STORER(ri, ro, number); break;}       
-            case 71:	{ STORER2(ri, ro, number); break;}     
-            default: assert(!"UNKNOWN COMMAND");  
+			case 1:	    { SYSCALL(r, number); break;}        
+			case 2:	    { ADD(ri, ro, number); break;}        
+			case 3:	    { ADDI(r, number); break;}        
+			case 4:	    { SUB(ri, ro, number); break;}        
+			case 5:	    { SUBI(r, number); break;}        
+			case 6:	    { MUL(ri, ro); break;}        
+			case 7:	    { MULI(r, number); break;}        
+			case 8:	    { DIV(ri, ro); break;}        
+			case 9:	    { DIVI(r, number); break;}        
+			case 12:	{ LC(r, number); break;}        
+			case 13:	{ SHL(ri, ro); break;}       
+			case 14:	{ SHLI(r, number); break;}       
+			case 15:	{ SHR(ri, ro); break;}       
+			case 16:	{ SHRI(r, number); break;}       
+			case 17:	{ AND(ri, ro); break;}       
+			case 18:	{ ANDI(r, number); break;}       
+			case 19:	{ OR(ri, ro); break;}       
+			case 20:	{ ORI(r, number); break;}       
+			case 21:	{ XOR(ri, ro); break;}       
+			case 22:	{ XORI(r, number); break;}       
+			case 23:	{ NOT(r); break;}       
+			case 24:	{ MOV(ri, ro, number); break;}       
+			case 32:	{ ADDD(ri, ro, number); break;}       
+			case 33:	{ SUBD(ri, ro, number); break;}       
+			case 34:	{ MULD(ri, ro, number); break;}       
+			case 35:	{ DIVD(ri, ro, number); break;}       
+			case 36:	{ ITOD(ri, ro, number); break;}       
+			case 37:	{ DTOI(ri, ro, number); break;}       
+			case 38:	{ PUSH(r, number); break;}       
+			case 39:	{ POP(r, number); break;}       
+			case 40:	{ CALL(ri, ro, number); break;}       
+			case 41:	{ CALLI(r, unumber); break;}       
+			case 42:	{ RET(r, number); break;}       
+			case 43:	{ CMP(ri, ro, number); break;}       
+			case 44:	{ CMPI(r, number); break;}       
+			case 45:	{ CMPD(ri, ro, number); break;}       
+			case 46:	{ JMP(unumber); break;}       
+			case 47:	{ JNE(unumber); break;}       
+			case 48:	{ JEQ(unumber); break;}       
+			case 49:	{ JLE(unumber); break;}       
+			case 50:	{ JL(unumber); break;}       
+			case 51:	{ JGE(unumber); break;}       
+			case 52:	{ JG(unumber); break;}       
+			case 64:	{ LOAD(r, unumber); break;}       
+			case 65:	{ STORE(r, unumber); break;}       
+			case 66:	{ LOAD2(r, unumber); break;}       
+			case 67:	{ STORE2(r, unumber); break;}       
+			case 68:	{ LOADR(ri, ro, number); break;}       
+			case 69:	{ LOADR2(ri, ro, number); break;}       
+			case 70:	{ STORER(ri, ro, number); break;}       
+			case 71:	{ STORER2(ri, ro, number); break;}     
+			default: assert(!"UNKNOWN COMMAND");  
 		}
 	}
 }

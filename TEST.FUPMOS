@@ -1,3 +1,11 @@
-push r0 100
-
+main:
+calli r0 tab:
 halt r0 0
+
+alter:
+addi r1 1
+halt r0 0
+
+tab:
+addi r5 5
+ret r0 0
