@@ -653,10 +653,9 @@ void FUPM_CPU::load_from_file(string filename)
 	while (!fin.eof())
 	{
 		fin >> tmp;
-
-		//changed
 		if (tmp.find(':') != -1)
 		{
+			tmp.pop_back();
 			labels[tmp] = count;
 			fin >> tmp;
 		}
@@ -737,53 +736,52 @@ void FUPM_CPU::load_from_file(string filename)
 	while(!fin.eof())
 	{
 		fin >> tmp;
-		if (tmp.find(':') != -1);
-			// commands[count++] = labels[tmp];
-		else
+		if (tmp.find(':') != -1)
+			fin >> tmp;
+		
+		switch (cmd_types[cmds[tmp]])
 		{
-			switch (cmd_types[cmds[tmp]])
+			case RI:
 			{
-				case RI:
-				{
-					commands[count++] = cmds[tmp];
-					fin >> tmp;
-					commands[count++] = reg_number[tmp];
-					fin >> tmp;
-					if (labels[tmp] != 0)
-						commands[count++] = labels[tmp];
-					else
-						commands[count++] = std::stoi(tmp);
-					break;
-				}
-				case RR:
-				{
-					commands[count++] = cmds[tmp];
-					fin >> tmp;
-					commands[count++] = reg_number[tmp];
-					fin >> tmp;
-					commands[count++] = reg_number[tmp];
-					fin >> tmp;
-					if (labels[tmp] != 0)
-						commands[count++] = labels[tmp];
-					else
-						commands[count++] = std::stoi(tmp);
-					break;
-				}
-				case RM:
-				{
-					commands[count++] = cmds[tmp];
-					fin >> tmp;
-					commands[count++] = reg_number[tmp];
-					fin >> tmp;
-					if (labels[tmp] != 0)
-						commands[count++] = labels[tmp];
-					else
-						commands[count++] = std::stoi(tmp);
-					break;
-				}
-				default: assert(!"FATAL ERROR");
+				commands[count++] = cmds[tmp];
+				fin >> tmp;
+				commands[count++] = reg_number[tmp];
+				fin >> tmp;
+				if (labels[tmp] != 0)
+					commands[count++] = labels[tmp];
+				else
+					commands[count++] = std::stoi(tmp);
+				break;
 			}
+			case RR:
+			{
+				commands[count++] = cmds[tmp];
+				fin >> tmp;
+				commands[count++] = reg_number[tmp];
+				fin >> tmp;
+				commands[count++] = reg_number[tmp];
+				fin >> tmp;
+				if (labels[tmp] != 0)
+					commands[count++] = labels[tmp];
+				else
+					commands[count++] = std::stoi(tmp);
+				break;
+			}
+			case RM:
+			{
+				commands[count++] = cmds[tmp];
+				fin >> tmp;
+				commands[count++] = reg_number[tmp];
+				fin >> tmp;
+				if (labels[tmp] != 0)
+					commands[count++] = labels[tmp];
+				else
+					commands[count++] = std::stoi(tmp);
+				break;
+			}
+			default: assert(!"FATAL ERROR");
 		}
+		
 	}
 	fin.close();
 }

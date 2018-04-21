@@ -1,11 +1,10 @@
 #include "fupm_cpu.cpp"
-//~ #include <iostream>
+#include <iostream>
 //~ #include <cmath>
 
-using std::cout;
-using std::endl;
 
 
+using namespace std;
 
 int main()
 {
