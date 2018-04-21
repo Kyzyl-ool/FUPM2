@@ -737,6 +737,9 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.close();
 	fin.open(filename);
 
+	if (labels["main"] != -1)
+		Registers[r15] = labels["main"];
+
 	while(!fin.eof())
 	{
 		fin >> tmp;
