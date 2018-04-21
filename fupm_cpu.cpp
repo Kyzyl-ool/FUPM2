@@ -27,6 +27,12 @@ enum mode
 	RM
 };
 
+typedef union
+{
+	double d;
+	int u[2];
+} du;
+
 struct data
 {
 	int value;
@@ -358,6 +364,15 @@ void FUPM_CPU::SYSCALL(registers r, int number)
 			scanf("%d", &Registers[r]);
 			break;
 		}
+		case 101:
+		{
+			du tmp;
+
+			scanf("%lg", &tmp.d);
+			Registers[r] = tmp.u[0];
+			Registers[r+1] = tmp.u[1];
+			break;
+		}
 		case 102:
 		{
 			printf("%d", Registers[r]);
@@ -507,23 +522,53 @@ void FUPM_CPU::ADDD		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::SUBD		(registers ri, registers ro, int number)
 {
-	
+	du tmpi, tmpo;
+	tmpi.u[0] = Registers[ri]; tmpi.u[1] = Registers[ri+1];
+	tmpo.u[0] = Registers[ro]; tmpo.u[1] = Registers[ro+1];
+
+	tmpi.d -= tmpo.d + number;
+
+	Registers[ri] = tmpi.u[0];
+	Registers[ri+1] = tmpi.u[1];
 }
 void FUPM_CPU::MULD		(registers ri, registers ro, int number)
 {
-	
+	du tmpi, tmpo;
+	tmpi.u[0] = Registers[ri]; tmpi.u[1] = Registers[ri+1];
+	tmpo.u[0] = Registers[ro]; tmpo.u[1] = Registers[ro+1];
+
+	tmpi.d *= tmpo.d;
+	tmpi.d += number;
+
+	Registers[ri] = tmpi.u[0];
+	Registers[ri+1] = tmpi.u[1];
 }
 void FUPM_CPU::DIVD		(registers ri, registers ro, int number)
 {
-	
+	du tmpi, tmpo;
+	tmpi.u[0] = Registers[ri]; tmpi.u[1] = Registers[ri+1];
+	tmpo.u[0] = Registers[ro]; tmpo.u[1] = Registers[ro+1];
+
+	tmpi.d /= tmpo.d;
+	tmpi.d += number;
+
+	Registers[ri] = tmpi.u[0];
+	Registers[ri+1] = tmpi.u[1];
 }
 void FUPM_CPU::ITOD		(registers ri, registers ro, int number)
 {
-	
+	double d = Registers[ro];
+	du tmp; tmp.d = d;
+	Registers[ri] = tmp.u[0];
+	Registers[ri+1] = tmp.u[1];
 }
 void FUPM_CPU::DTOI		(registers ri, registers ro, int number)
 {
-	
+	du tmp;
+	tmp.u[0] = Registers[ro];
+	tmp.u[1] = Registers[ro+1];
+
+	Registers[ri] = tmp.d;
 }
 void FUPM_CPU::PUSH		(registers r, int number)
 {
@@ -569,7 +614,17 @@ void FUPM_CPU::CMPI		(registers r, int number)
 }
 void FUPM_CPU::CMPD		(registers ri, registers ro, int number)
 {
-	
+	du tmp1, tmp2;
+
+	tmp1.u[0] = Registers[ri]; tmp1.u[1] = Registers[ri+1];
+	tmp2.u[0] = Registers[ro]; tmp2.u[1] = Registers[ro+1];
+
+	if (tmp1.d == tmp2.d)
+		Flags = 0b0100;
+	else if (tmp1.d > tmp2.d)
+		Flags = 0b1010;
+	else
+		Flags = 0b1001;
 }
 void FUPM_CPU::JMP		(unsigned int number)
 {

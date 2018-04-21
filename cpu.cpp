@@ -16,6 +16,6 @@ int main()
 	Test.load_from_file("TEST.FUPMOS");
 	Test.run();
 
-	Test.dump();
+	// Test.dump();
 	return 0;
 }
