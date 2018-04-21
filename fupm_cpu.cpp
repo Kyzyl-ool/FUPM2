@@ -737,8 +737,8 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.close();
 	fin.open(filename);
 
-	if (labels["main"] != -1)
-		Registers[r15] = labels["main"];
+	if (labels["main"]-1 != -1)
+		Registers[r15] = labels["main"]-1;
 
 	while(!fin.eof())
 	{
@@ -797,7 +797,7 @@ void FUPM_CPU::load_from_file(string filename)
 				commands[count++] = reg_number[tmp];
 				fin >> tmp;
 				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp];
+					commands[count++] = labels[tmp]-1;
 				else
 					commands[count++] = std::stoi(tmp);
 				break;
@@ -811,7 +811,7 @@ void FUPM_CPU::load_from_file(string filename)
 				commands[count++] = reg_number[tmp];
 				fin >> tmp;
 				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp];
+					commands[count++] = labels[tmp]-1;
 				else
 					commands[count++] = std::stoi(tmp);
 				break;

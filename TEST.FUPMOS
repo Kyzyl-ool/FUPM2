@@ -7,4 +7,4 @@ main:
 	syscall r0 103
 	lc r2 10
 	syscall r2 105
-	end main
+end main
