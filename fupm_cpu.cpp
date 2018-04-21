@@ -351,28 +351,8 @@ void FUPM_CPU::HALT(registers r, int number)
 
 void FUPM_CPU::SYSCALL(registers r, int number)
 {
-	switch (number)
-	{
-		case 100:
-		{
-			scanf("%d", &Registers[r]);
-			break;
-		}
-		case 102:
-		{
-			printf("%d\n", Registers[r]);
-			break;
-		}
-		case 105:
-		{
-			printf("%c\n", Registers[r]);
-			break;
-		}
-		default:
-		{
-			assert(!"UNDEFINED COMMAND");
-		}
-	}
+	Registers[r] = number;
+	Registers[r15] = number;
 }
 
 void FUPM_CPU::ADD		(registers ri, registers ro, int number)
@@ -642,7 +622,6 @@ void FUPM_CPU::load_from_file(string filename)
 	running = true;
 	std::ifstream fin(filename);
 	assert("FILE NOT EXISTS" && fin);
-<<<<<<< HEAD
 	string tmp, cmd;
 
 	int count = 0;
@@ -693,19 +672,6 @@ void FUPM_CPU::load_from_file(string filename)
 			fin >> tmp;
 		}
 
-=======
-	
-	int number;
-	unsigned int unumber;
-	enum registers ri, ro, r;
-	string tmp, cmd;
-
-
-	while (!fin.eof())
-	{
-		printf("123123123\n");
-		fin >> cmd;
->>>>>>> syscall
 		switch (cmd_types[cmds[cmd]])
 		{
 			case RI:
@@ -833,7 +799,6 @@ void FUPM_CPU::run()
 		switch (cmd)
 		{
 			case 0:	    { HALT(r, number); break;}        
-<<<<<<< HEAD
 			case 1:	    { SYSCALL(r, number); break;}        
 			case 2:	    { ADD(ri, ro, number); break;}        
 			case 3:	    { ADDI(r, number); break;}        
@@ -886,63 +851,6 @@ void FUPM_CPU::run()
 			case 70:	{ STORER(ri, ro, number); break;}       
 			case 71:	{ STORER2(ri, ro, number); break;}     
 			default: assert(!"UNKNOWN COMMAND");  
-=======
-            case 1:	    { SYSCALL(r, number); break;}        
-            case 2:	    { ADD(ri, ro, number); break;}        
-            case 3:	    { ADDI(r, number); break;}        
-            case 4:	    { SUB(ri, ro, number); break;}        
-            case 5:	    { SUBI(r, number); break;}        
-            case 6:	    { MUL(ri, ro); break;}        
-            case 7:	    { MULI(r, number); break;}        
-            case 8:	    { DIV(ri, ro); break;}        
-            case 9:	    { DIVI(r, number); break;}       
-
-            case 12:	{ LC(r, number); break;}        
-            case 13:	{ SHL(ri, ro); break;}       
-            case 14:	{ SHLI(r, number); break;}       
-            case 15:	{ SHR(ri, ro); break;}       
-            case 16:	{ SHRI(r, number); break;}       
-            case 17:	{ AND(ri, ro); break;}       
-            case 18:	{ ANDI(r, number); break;}       
-            case 19:	{ OR(ri, ro); break;}       
-            case 20:	{ ORI(r, number); break;}       
-            case 21:	{ XOR(ri, ro); break;}       
-            case 22:	{ XORI(r, number); break;}       
-            case 23:	{ NOT(r); break;}       
-            case 24:	{ MOV(ri, ro, number); break;}       
-
-	        case 32:	{ ADDD(ri, ro, number); break;}       
-            case 33:	{ SUBD(ri, ro, number); break;}       
-            case 34:	{ MULD(ri, ro, number); break;}       
-            case 35:	{ DIVD(ri, ro, number); break;}       
-            case 36:	{ ITOD(ri, ro, number); break;}       
-            case 37:	{ DTOI(ri, ro, number); break;}       
-            case 38:	{ PUSH(r, number); break;}       
-            case 39:	{ POP(r, number); break;}       
-            case 40:	{ CALL(ri, ro, number); break;}       
-            case 41:	{ CALLI(r, unumber); break;}       
-            case 42:	{ RET(r, number); break;}       
-            case 43:	{ CMP(ri, ro, number); break;}       
-            case 44:	{ CMPI(r, number); break;}       
-            case 45:	{ CMPD(ri, ro, number); break;}       
-            case 46:	{ JMP(unumber); break;}       
-            case 47:	{ JNE(unumber); break;}       
-            case 48:	{ JEQ(unumber); break;}       
-            case 49:	{ JLE(unumber); break;}       
-            case 50:	{ JL(unumber); break;}       
-            case 51:	{ JGE(unumber); break;}       
-            case 52:	{ JG(unumber); break;}       
-
-            case 64:	{ LOAD(r, unumber); break;}       
-            case 65:	{ STORE(r, unumber); break;}       
-            case 66:	{ LOAD2(r, unumber); break;}       
-            case 67:	{ STORE2(r, unumber); break;}       
-            case 68:	{ LOADR(ri, ro, number); break;}       
-            case 69:	{ LOADR2(ri, ro, number); break;}       
-            case 70:	{ STORER(ri, ro, number); break;}       
-            case 71:	{ STORER2(ri, ro, number); break;}     
-            default: assert(!"UNKNOWN COMMAND");  
->>>>>>> syscall
 		}
 	}
 }
