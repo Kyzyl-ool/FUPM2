@@ -367,8 +367,8 @@ void FUPM_CPU::SYSCALL(registers r, int number)
 		case 101:
 		{
 			du tmp;
-
 			scanf("%lg", &tmp.d);
+			
 			Registers[r] = tmp.u[0];
 			Registers[r+1] = tmp.u[1];
 			break;
@@ -377,6 +377,13 @@ void FUPM_CPU::SYSCALL(registers r, int number)
 		{
 			printf("%d", Registers[r]);
 			break;
+		}
+		case 103:
+		{
+			du tmp;
+			tmp.u[0] = Registers[r];
+			tmp.u[1] = Registers[r+1];
+			printf("%lg", tmp.d);
 		}
 		case 105:
 		{
@@ -496,29 +503,14 @@ void FUPM_CPU::MOV		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::ADDD		(registers ri, registers ro, int number)
 {
-	double d1 = (Registers[ri] & ((1 >> 22) - 1)) | Registers[ri+1];
-	int n1 = Registers[ri] & ((1 >> 11) - 1) >> 21;
-	if ((Registers[ri] & (1 >> 31)) == 1)
-		d1 = -d1;
-	if (n1 < 0)
-		for (int i = 0; i < n1; i++)
-			d1 /= 2;
-	else if (n1 > 0)
-		for (int i = 0; i < n1; i++)
-			d1 *= 2;
-	
-	double d2 = (Registers[ro] & ((1 >> 22) - 1)) | Registers[ro+1];
-	int n2 = Registers[ro] & ((1 >> 11) - 1) >> 21;
-	if ((Registers[ro] & (1 >> 31)) == 1)
-		d2 = -d2;
-	if (n2 < 0)
-		for (int i = 0; i < n2; i++)
-			d2 /= 2;
-	else if (n2 > 0)
-		for (int i = 0; i < n2; i++)
-			d2 *= 2;
-	
-	
+	du tmpi, tmpo;
+	tmpi.u[0] = Registers[ri]; tmpi.u[1] = Registers[ri+1];
+	tmpo.u[0] = Registers[ro]; tmpo.u[1] = Registers[ro+1];
+
+	tmpi.d += tmpo.d + number;
+
+	Registers[ri] = tmpi.u[0];
+	Registers[ri+1] = tmpi.u[1];
 }
 void FUPM_CPU::SUBD		(registers ri, registers ro, int number)
 {
