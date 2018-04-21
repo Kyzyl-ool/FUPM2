@@ -342,8 +342,28 @@ void FUPM_CPU::HALT(registers r, int number)
 
 void FUPM_CPU::SYSCALL(registers r, int number)
 {
-	Registers[r] = number;
-	Registers[r15] = number;
+	switch (number)
+	{
+		case 100:
+		{
+			scanf("%d", &Registers[r]);
+			break;
+		}
+		case 102:
+		{
+			printf("%d\n", Registers[r]);
+			break;
+		}
+		case 105:
+		{
+			printf("%c\n", Registers[r]);
+			break;
+		}
+		default:
+		{
+			assert(!"UNDEFINED COMMAND");
+		}
+	}
 }
 
 void FUPM_CPU::ADD		(registers ri, registers ro, int number)
@@ -613,14 +633,16 @@ void FUPM_CPU::run(string filename)
 	running = true;
 	std::ifstream fin(filename);
 	assert("FILE NOT EXISTS" && fin);
+	
 	int number;
 	unsigned int unumber;
 	enum registers ri, ro, r;
 	string tmp, cmd;
 
+
 	while (!fin.eof())
 	{
-
+		printf("123123123\n");
 		fin >> cmd;
 		switch (cmd_types[cmds[cmd]])
 		{
@@ -661,7 +683,8 @@ void FUPM_CPU::run(string filename)
             case 6:	    { MUL(ri, ro); break;}        
             case 7:	    { MULI(r, number); break;}        
             case 8:	    { DIV(ri, ro); break;}        
-            case 9:	    { DIVI(r, number); break;}        
+            case 9:	    { DIVI(r, number); break;}       
+
             case 12:	{ LC(r, number); break;}        
             case 13:	{ SHL(ri, ro); break;}       
             case 14:	{ SHLI(r, number); break;}       
@@ -675,6 +698,7 @@ void FUPM_CPU::run(string filename)
             case 22:	{ XORI(r, number); break;}       
             case 23:	{ NOT(r); break;}       
             case 24:	{ MOV(ri, ro, number); break;}       
+
 	        case 32:	{ ADDD(ri, ro, number); break;}       
             case 33:	{ SUBD(ri, ro, number); break;}       
             case 34:	{ MULD(ri, ro, number); break;}       
@@ -696,6 +720,7 @@ void FUPM_CPU::run(string filename)
             case 50:	{ JL(unumber); break;}       
             case 51:	{ JGE(unumber); break;}       
             case 52:	{ JG(unumber); break;}       
+
             case 64:	{ LOAD(r, unumber); break;}       
             case 65:	{ STORE(r, unumber); break;}       
             case 66:	{ LOAD2(r, unumber); break;}       
