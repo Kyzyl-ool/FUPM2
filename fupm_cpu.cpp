@@ -351,8 +351,33 @@ void FUPM_CPU::HALT(registers r, int number)
 
 void FUPM_CPU::SYSCALL(registers r, int number)
 {
-	Registers[r] = number;
-	Registers[r15] = number;
+	switch (number)
+	{
+		case 100:
+		{
+			scanf("%d", &Registers[r]);
+			break;
+		}
+		case 102:
+		{
+			printf("%d\n", Registers[r]);
+			break;
+		}
+		case 105:
+		{
+			printf("%c\n", Registers[r]);
+			break;
+		}
+		case 0:
+		{
+			running = false;
+			break;
+		}
+		default:
+		{
+			assert(!"UNDEFINED COMMAND");
+		}
+	}
 }
 
 void FUPM_CPU::ADD		(registers ri, registers ro, int number)
