@@ -7,7 +7,7 @@
 #include <cassert>
 
 #define STACK_SIZE 1024
-#define DEFAULT_MEMORY_SIZE 65536
+#define DEFAULT_MEMORY_SIZE 1048576
 #define AMOUNT_OF_CPU_COMMANDS 52
 
 using std::cout;
@@ -360,12 +360,12 @@ void FUPM_CPU::SYSCALL(registers r, int number)
 		}
 		case 102:
 		{
-			printf("%d\n", Registers[r]);
+			printf("%d", Registers[r]);
 			break;
 		}
 		case 105:
 		{
-			printf("%c\n", Registers[r]);
+			printf("%c", Registers[r]);
 			break;
 		}
 		case 0:
