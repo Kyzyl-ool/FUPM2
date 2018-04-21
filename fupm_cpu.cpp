@@ -694,7 +694,7 @@ void FUPM_CPU::load_from_file(string filename)
 	running = true;
 	std::ifstream fin(filename);
 	assert("FILE NOT EXISTS" && fin);
-	string tmp, cmd;
+	string tmp, cmd, main_label;
 
 	int count = 0;
 	while (!fin.eof())
@@ -706,6 +706,8 @@ void FUPM_CPU::load_from_file(string filename)
 			labels[tmp] = count;
 			fin >> tmp;
 		}
+		if (tmp.find("end ") != -1) break;
+
 
 		switch (cmd_types[cmds[tmp]])
 		{
@@ -738,7 +740,10 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.open(filename);
 
 	if (labels["main"] != -1)
+	{
 		Registers[r15] = labels["main"];
+		main_label = "main";
+	}
 
 	while(!fin.eof())
 	{
@@ -747,6 +752,11 @@ void FUPM_CPU::load_from_file(string filename)
 		{
 			fin >> tmp;
 		}
+		else if (tmp.find("end ") != -1)
+		{
+			break;
+		}
+
 
 		switch (cmd_types[cmds[cmd]])
 		{
@@ -782,13 +792,18 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.close();
 	fin.open(filename);
 	
+
 	count = 0;
 	while(!fin.eof())
 	{
 		fin >> tmp;
 		if (tmp.find(':') != -1)
 			fin >> tmp;
-		
+		else if (tmp.find("end") != -1)
+		{
+			commands[count] = -1;
+			break;
+		}
 		switch (cmd_types[cmds[tmp]])
 		{
 			case RI:
@@ -847,6 +862,10 @@ void FUPM_CPU::run()
 	while (running)
 	{
 		cmd = commands[Registers[r15]++];
+		if (cmd == -1)
+		{
+			running = false;
+		}
 		switch (cmd_types[cmd])
 		{
 			case RI:
