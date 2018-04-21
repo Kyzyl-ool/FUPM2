@@ -656,7 +656,7 @@ void FUPM_CPU::load_from_file(string filename)
 		if (tmp.find(':') != -1)
 		{
 			tmp.pop_back();
-			labels[tmp] = count;
+			labels[tmp] = count+1;
 			fin >> tmp;
 		}
 
@@ -727,7 +727,6 @@ void FUPM_CPU::load_from_file(string filename)
 	}
 
 	commands = (int* )calloc(amount_of_commands, sizeof(int));
-
 	
 	fin.close();
 	fin.open(filename);
@@ -747,7 +746,7 @@ void FUPM_CPU::load_from_file(string filename)
 				fin >> tmp;
 				commands[count++] = reg_number[tmp];
 				fin >> tmp;
-				if (labels[tmp] != 0)
+				if (labels[tmp]-1 != -1)
 					commands[count++] = labels[tmp];
 				else
 					commands[count++] = std::stoi(tmp);
@@ -761,7 +760,7 @@ void FUPM_CPU::load_from_file(string filename)
 				fin >> tmp;
 				commands[count++] = reg_number[tmp];
 				fin >> tmp;
-				if (labels[tmp] != 0)
+				if (labels[tmp]-1 != -1)
 					commands[count++] = labels[tmp];
 				else
 					commands[count++] = std::stoi(tmp);
@@ -773,7 +772,7 @@ void FUPM_CPU::load_from_file(string filename)
 				fin >> tmp;
 				commands[count++] = reg_number[tmp];
 				fin >> tmp;
-				if (labels[tmp] != 0)
+				if (labels[tmp]-1 != -1)
 					commands[count++] = labels[tmp];
 				else
 					commands[count++] = std::stoi(tmp);
