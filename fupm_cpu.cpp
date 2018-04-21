@@ -653,6 +653,8 @@ void FUPM_CPU::load_from_file(string filename)
 	while (!fin.eof())
 	{
 		fin >> tmp;
+
+		//changed
 		if (tmp.find(':') != -1)
 		{
 			labels[tmp] = count;
