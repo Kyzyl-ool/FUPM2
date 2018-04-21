@@ -1,5 +1,4 @@
 main:
-<<<<<<< HEAD
 syscall r0 100
 mov r2 r0 0  
 mul r0 r2 0
@@ -8,7 +7,4 @@ lc r0 10
 syscall r0 105
 lc r0 0
 syscall r0 0
-=======
-addi r1 9
->>>>>>> syscall
 halt r0 0
