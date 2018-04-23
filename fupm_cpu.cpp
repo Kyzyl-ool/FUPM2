@@ -744,6 +744,11 @@ void FUPM_CPU::load_from_file(string filename)
 		Registers[r15] = labels["main"]-1;
 		main_label = "main";
 	}
+	else
+	{
+		main_label = labels.begin()->first;
+	}
+
 
 	while(!fin.eof())
 	{
@@ -791,7 +796,6 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.close();
 	fin.open(filename);
 	
-
 	count = 0;
 	while(!fin.eof())
 	{
@@ -800,7 +804,9 @@ void FUPM_CPU::load_from_file(string filename)
 			fin >> tmp;
 		else if (tmp.find("end") != -1)
 		{
-			commands[count] = -1;
+			fin >> tmp;
+			if (tmp.find(main_label) != -1)
+				commands[count] = -1;
 			break;
 		}
 		switch (cmd_types[cmds[tmp]])
@@ -891,6 +897,7 @@ void FUPM_CPU::run()
 
 		switch (cmd)
 		{
+			case -1: {running = false;}
 			case 0:	    { HALT(r, number); break;}        
 			case 1:	    { SYSCALL(r, number); break;}        
 			case 2:	    { ADD(ri, ro, number); break;}        
