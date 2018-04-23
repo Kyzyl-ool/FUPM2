@@ -10,7 +10,7 @@ int main()
 {
 	FUPM_CPU Test;
 	Test.load_from_file("TEST.FUPMOS");
-	// Test.run();
+	Test.run();
 
 	Test.dump();
 	return 0;
