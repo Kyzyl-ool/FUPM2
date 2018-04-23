@@ -1,10 +1,6 @@
-label:
-	halt r0 0
+void_func:
+    lc r7 771
+    ret 0
 main:
-	syscall r0 101
-	syscall r2 101
-	addd r0 r2 0
-	syscall r0 103
-	lc r2 10
-	syscall r2 105
+    calli void_func
 end main

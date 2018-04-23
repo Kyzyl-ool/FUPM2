@@ -24,7 +24,9 @@ enum mode
 {
 	RR,
 	RI,
-	RM
+	RM,
+	RI1,
+	RM1
 };
 
 typedef union
@@ -105,18 +107,18 @@ data ops[] =
 	{38, "push", RI},
 	{39, "pop", RI},
 	{40, "call", RR},
-	{41, "calli", RM},
-	{42, "ret", RI},
+	{41, "calli", RM1},
+	{42, "ret", RI1},
 	{43, "cmp", RR},
 	{44, "cmpi", RI},
 	{45, "cmpd", RR},
-	{46, "jmp", RM},
-	{47, "jne", RM},
-	{48, "jeq", RM},
-	{49, "jle", RM},
-	{50, "jl", RM},
-	{51, "jge", RM},
-	{52, "jg", RM},
+	{46, "jmp", RM1},
+	{47, "jne", RM1},
+	{48, "jeq", RM1},
+	{49, "jle", RM1},
+	{50, "jl", RM1},
+	{51, "jge", RM1},
+	{52, "jg", RM1},
 	
 
 
@@ -244,7 +246,7 @@ public:
 	void POP		(registers r, int number);
 	void CALL		(registers ri, registers ro, int number);
 	void CALLI		(registers r, unsigned int number);
-	void RET		(registers r, int number);
+	void RET		(int number);
 	void CMP		(registers ri, registers ro, int number);
 	void CMPI		(registers r, int number);
 	void CMPD		(registers ri, registers ro, int number);
@@ -298,7 +300,7 @@ amount_of_commands(0)
 	reg_number["r10"] = r10;
 	reg_number["r11"] = r11;
 	reg_number["r12"] = r12;
-	reg_number["r13"] = r13;	
+	reg_number["r13"] = r13;
 	reg_number["r14"] = r14;
 	reg_number["r15"] = r15;
 
@@ -580,10 +582,14 @@ void FUPM_CPU::CALLI		(registers r, unsigned int number)
 	Stack[Registers[r14]++] = Registers[r15];
 	Registers[r15] = number;
 }
-void FUPM_CPU::RET		(registers r, int number)
+void FUPM_CPU::RET		(int number)
 {
-	Registers[r15] = Stack[Registers[r14] - 1] + number;
-	Stack[Registers[r14]--] = 0;
+	for (int i = 0; i < number; ++i)
+	{
+		Stack[Registers[r14]-1] = 0;
+		Registers[r14]--;
+	}
+	Registers[r15] = Stack[Registers[r14]-- - 1];
 }
 
 void FUPM_CPU::CMP		(registers ri, registers ro, int number)
@@ -691,7 +697,6 @@ void FUPM_CPU::STORER2	(registers ri, registers ro, int number)
 
 void FUPM_CPU::load_from_file(string filename)
 {
-	running = true;
 	std::ifstream fin(filename);
 	assert("FILE NOT EXISTS" && fin);
 	string tmp, cmd, main_label;
@@ -733,6 +738,18 @@ void FUPM_CPU::load_from_file(string filename)
 				fin >> tmp;
 				break;
 			}
+			case RI1:
+			{
+				count += 2;
+				fin >> tmp;
+				break;
+			}
+			case RM1:
+			{
+				count += 2;
+				fin >> tmp;
+				break;
+			}
 			default: assert(!"FATAL ERROR");
 		}
 	}
@@ -757,7 +774,7 @@ void FUPM_CPU::load_from_file(string filename)
 		{
 			fin >> tmp;
 		}
-		else if (tmp.find("end ") != -1)
+		else if (tmp.find("end") != -1)
 		{
 			break;
 		}
@@ -784,6 +801,18 @@ void FUPM_CPU::load_from_file(string filename)
 			{
 				amount_of_commands += 3;
 				fin >> tmp;
+				fin >> tmp;
+				break;
+			}
+			case RI1:
+			{
+				amount_of_commands += 2;
+				fin >> tmp;
+				break;
+			}
+			case RM1:
+			{
+				amount_of_commands += 2;
 				fin >> tmp;
 				break;
 			}
@@ -844,7 +873,27 @@ void FUPM_CPU::load_from_file(string filename)
 				commands[count++] = reg_number[tmp];
 				fin >> tmp;
 				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp];
+					commands[count++] = labels[tmp]-1;
+				else
+					commands[count++] = std::stoi(tmp);
+				break;
+			}
+			case RI1:
+			{
+				commands[count++] = cmds[tmp];
+				fin >> tmp;
+				if (labels[tmp]-1 != -1)
+					commands[count++] = labels[tmp]-1;
+				else
+					commands[count++] = std::stoi(tmp);
+				break;
+			}
+			case RM1:
+			{
+				commands[count++] = cmds[tmp];
+				fin >> tmp;
+				if (labels[tmp]-1 != -1)
+					commands[count++] = labels[tmp]-1;
 				else
 					commands[count++] = std::stoi(tmp);
 				break;
@@ -867,10 +916,7 @@ void FUPM_CPU::run()
 	while (running)
 	{
 		cmd = commands[Registers[r15]++];
-		if (cmd == -1)
-		{
-			running = false;
-		}
+		cout << cmd << endl;
 		switch (cmd_types[cmd])
 		{
 			case RI:
@@ -890,6 +936,16 @@ void FUPM_CPU::run()
 			{
 				r = (registers)commands[Registers[r15]++];
 				unumber = (registers)commands[Registers[r15]++];
+				break;
+			}
+			case RI1:
+			{
+				number = commands[Registers[r15]++];
+				break;
+			}
+			case RM1:
+			{
+				number = commands[Registers[r15]++];
 				break;
 			}
 			default: assert(!"FATAL ERROR");
@@ -931,7 +987,7 @@ void FUPM_CPU::run()
 			case 39:	{ POP(r, number); break;}       
 			case 40:	{ CALL(ri, ro, number); break;}       
 			case 41:	{ CALLI(r, unumber); break;}       
-			case 42:	{ RET(r, number); break;}       
+			case 42:	{ RET(number); break;}       
 			case 43:	{ CMP(ri, ro, number); break;}       
 			case 44:	{ CMPI(r, number); break;}       
 			case 45:	{ CMPD(ri, ro, number); break;}       
