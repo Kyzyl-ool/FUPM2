@@ -739,7 +739,7 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.close();
 	fin.open(filename);
 	
-	if (labels["main"]-1 != 0)
+	if (labels["main"]-1 != -1)
 	{
 		Registers[r15] = labels["main"]-1;
 		main_label = "main";
@@ -808,23 +808,13 @@ void FUPM_CPU::load_from_file(string filename)
 			case RI:
 			{
 				commands[count++] = cmds[tmp];
-				if (cmds[tmp] == 42)
-				{
-					fin >> tmp;
-					// cout << "tmp: " << tmp << endl;
-					commands[count++] = std::stoi(tmp);
-					break;
-				}
 				fin >> tmp;
-				if (labels[tmp]-1 != 0)
+				commands[count++] = reg_number[tmp];
+				fin >> tmp;
+				if (labels[tmp]-1 != -1)
 					commands[count++] = labels[tmp]-1;
 				else
-				{
-					commands[count++] = reg_number[tmp];
-					fin >> tmp;
-					// cout << "tmp: " << tmp << endl;
 					commands[count++] = std::stoi(tmp);
-				}
 				break;
 			}
 			case RR:
@@ -835,28 +825,22 @@ void FUPM_CPU::load_from_file(string filename)
 				fin >> tmp;
 				commands[count++] = reg_number[tmp];
 				fin >> tmp;
-				if (labels[tmp]-1 != 0)
+				if (labels[tmp]-1 != -1)
 					commands[count++] = labels[tmp]-1;
 				else
-				{
-					// cout << "tmp: " << tmp << endl;
 					commands[count++] = std::stoi(tmp);
-				}
 				break;
 			}
 			case RM:
 			{
 				commands[count++] = cmds[tmp];
 				fin >> tmp;
-				if (labels[tmp]-1 != 0)
-					commands[count++] = labels[tmp]-1;
+				commands[count++] = reg_number[tmp];
+				fin >> tmp;
+				if (labels[tmp]-1 != -1)
+					commands[count++] = labels[tmp];
 				else
-				{
-					commands[count++] = reg_number[tmp];
-					fin >> tmp;
-					// cout << "tmp: " << tmp << endl;
 					commands[count++] = std::stoi(tmp);
-				}
 				break;
 			}
 			default: assert(!"FATAL ERROR");
@@ -877,6 +861,10 @@ void FUPM_CPU::run()
 	while (running)
 	{
 		cmd = commands[Registers[r15]++];
+		if (cmd == -1)
+		{
+			running = false;
+		}
 		switch (cmd_types[cmd])
 		{
 			case RI:
@@ -903,7 +891,6 @@ void FUPM_CPU::run()
 
 		switch (cmd)
 		{
-			case -1:    { running = false; break; }
 			case 0:	    { HALT(r, number); break;}        
 			case 1:	    { SYSCALL(r, number); break;}        
 			case 2:	    { ADD(ri, ro, number); break;}        
