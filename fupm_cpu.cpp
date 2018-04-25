@@ -6,9 +6,9 @@
 #include <cmath>
 #include <cassert>
 
-#define STACK_SIZE 1024
-#define DEFAULT_MEMORY_SIZE 1048576
+#define STACK_SIZE 1048576
 #define AMOUNT_OF_CPU_COMMANDS 52
+#define STACK_POISON -999
 
 using std::cout;
 using std::cin;
@@ -22,9 +22,9 @@ map <string, int> labels;
 
 enum mode
 {
-	RR,
-	RI,
-	RM,
+	RR ,
+	RI ,
+	RM ,
 	RI1,
 	RM1
 };
@@ -64,151 +64,130 @@ enum registers
 
 map <string, enum registers> reg_number;
 
-data ops[] =
-{
-	{0, "halt", RI},
-	{1, "syscall", RI},
-	{2, "add", RR},
-	{3, "addi", RI},
-	{4, "sub", RR},
-	{5, "subi", RI},
-	{6, "mul", RR},
-	{7, "muli", RI},
-	{8, "div", RR},
-	{9, "divi", RI},
-
-
-	{12, "lc", RI},
-	{13, "shl", RR},
-	{14, "shli", RI},
-	{15, "shr", RR},
-	{16, "shri", RI},
-	{17, "and", RR},
-	{18, "andi", RI},
-	{19, "or", RR},
-	{20, "ori", RI},
-	{21, "xor", RR},
-	{22, "xori", RI},
-	{23, "not", RI},
-	{24, "mov", RR},
-
-
-
-
-
-
-
-	{32, "addd", RR},
-	{33, "subd", RR},
-	{34, "muld", RR},
-	{35, "divd", RR},
-	{36, "itod", RR},
-	{37, "dtoi", RR},
-	{38, "push", RI},
-	{39, "pop", RI},
-	{40, "call", RR},
-	{41, "calli", RM1},
-	{42, "ret", RI1},
-	{43, "cmp", RR},
-	{44, "cmpi", RI},
-	{45, "cmpd", RR},
-	{46, "jmp", RM1},
-	{47, "jne", RM1},
-	{48, "jeq", RM1},
-	{49, "jle", RM1},
-	{50, "jl", RM1},
-	{51, "jge", RM1},
-	{52, "jg", RM1},
-	
-
-
-
-
-
-
-
-
-
-
-	{64, "load", RM},
-	{65, "store", RM},
-	{66, "load2", RM},
-	{67, "store2", RM},
-	{68, "loadr", RR},
-	{69, "storer", RR},
-	{70, "loadr2", RM},
-	{71, "storer2", RR}
-};
 
 enum code {
-    HALT  		= 0,
-    SYSCALL  	= 1,
-    ADD  		= 2,
-    ADDI  		= 3,
-    SUB  		= 4,
-    SUBI  		= 5,
-    MUL  		= 6,
-    MULI  		= 7,
-    DIV  		= 8,
-    DIVI  		= 9,
-    LC  		= 12,
-    SHL  		= 13,
-    SHLI  		= 14,
-    SHR  		= 15,
-    SHRI  		= 16,
-    AND  		= 17,
-    ANDI  		= 18,
-    OR  		= 19,
-    ORI  		= 20,
-    XOR  		= 21,
-    XORI  		= 22,
-    NOT  		= 23,
-    MOV  		= 24,
-	ADDD  		= 32,
-    SUBD  		= 33,
-    MULD  		= 34,
-    DIVD  		= 35,
-    ITOD  		= 36,
-    DTOI  		= 37,
-    PUSH  		= 38,
-    POP  		= 39,
-    CALL  		= 40,
-    CALLI  		= 41,
-    RET  		= 42,
-    CMP  		= 43,
-    CMPI  		= 44,
-    CMPD  		= 45,
-    JMP  		= 46,
-    JNE  		= 47,
-    JEQ  		= 48,
-    JLE  		= 49,
-    JL  		= 50,
-    JGE  		= 51,
-    JG  		= 52,
-    LOAD  		= 64,
-    STORE  		= 65,
-    LOAD2  		= 66,
-    STORE2  	= 67,
-    LOADR  		= 68,
-    LOADR2  	= 69,
-    STORER  	= 70,
-    STORER2  	= 71
+    HALT  	 =  0,
+    SYSCALL  =  1,
+    ADD  	 =  2,
+    ADDI  	 =  3,
+    SUB  	 =  4,
+    SUBI  	 =  5,
+    MUL  	 =  6,
+    MULI  	 =  7,
+    DIV  	 =  8,
+    DIVI  	 =  9,
+    LC  	 = 12,
+    SHL  	 = 13,
+    SHLI  	 = 14,
+    SHR  	 = 15,
+    SHRI  	 = 16,
+    AND  	 = 17,
+    ANDI  	 = 18,
+    OR  	 = 19,
+    ORI  	 = 20,
+    XOR  	 = 21,
+    XORI  	 = 22,
+    NOT  	 = 23,
+    MOV  	 = 24,
+	ADDD  	 = 32,
+    SUBD  	 = 33,
+    MULD  	 = 34,
+    DIVD  	 = 35,
+    ITOD  	 = 36,
+    DTOI  	 = 37,
+    PUSH  	 = 38,
+    POP  	 = 39,
+    CALL  	 = 40,
+    CALLI  	 = 41,
+    RET  	 = 42,
+    CMP  	 = 43,
+    CMPI  	 = 44,
+    CMPD  	 = 45,
+    JMP  	 = 46,
+    JNE  	 = 47,
+    JEQ  	 = 48,
+    JLE  	 = 49,
+    JL  	 = 50,
+    JGE  	 = 51,
+    JG  	 = 52,
+    LOAD  	 = 64,
+    STORE  	 = 65,
+    LOAD2  	 = 66,
+    STORE2   = 67,
+    LOADR  	 = 68,
+    LOADR2   = 69,
+    STORER   = 70,
+    STORER2  = 71
+};
+
+data ops[] =
+{
+	{HALT   , "halt"   , RI },
+	{SYSCALL, "syscall", RI },
+	{ADD    , "add"    , RR },
+	{ADDI   , "addi"   , RI },
+	{SUB    , "sub"    , RR },
+	{SUBI   , "subi"   , RI },
+	{MUL    , "mul"    , RR },
+	{MULI   , "muli"   , RI },
+	{DIV    , "div"    , RR },
+	{DIVI   , "divi"   , RI },
+	{LC     , "lc"     , RI },
+	{SHL    , "shl"    , RR },
+	{SHLI   , "shli"   , RI },
+	{SHR    , "shr"    , RR },
+	{SHRI   , "shri"   , RI },
+	{AND    , "and"    , RR },
+	{ANDI   , "andi"   , RI },
+	{OR     , "or"     , RR },
+	{ORI    , "ori"    , RI },
+	{XOR    , "xor"    , RR },
+	{XORI   , "xori"   , RI },
+	{NOT    , "not"    , RI },
+	{MOV    , "mov"    , RR },
+	{ADDD   , "addd"   , RR },
+	{SUBD   , "subd"   , RR },
+	{MULD   , "muld"   , RR },
+	{DIVD   , "divd"   , RR },
+	{ITOD   , "itod"   , RR },
+	{DTOI   , "dtoi"   , RR },
+	{PUSH   , "push"   , RI },
+	{POP    , "pop"    , RI },
+	{CALL   , "call"   , RR },
+	{CALLI  , "calli"  , RM1},
+	{RET    , "ret"    , RI1},
+	{CMP    , "cmp"    , RR },
+	{CMPI   , "cmpi"   , RI },
+	{CMPD   , "cmpd"   , RR },
+	{JMP    , "jmp"    , RM1},
+	{JNE    , "jne"    , RM1},
+	{JEQ    , "jeq"    , RM1},
+	{JLE    , "jle"    , RM1},
+	{JL     , "jl"     , RM1},
+	{JGE    , "jge"    , RM1},
+	{JG     , "jg"     , RM1},
+	{LOAD   , "load"   , RM },
+	{STORE  , "store"  , RM },
+	{LOAD2  , "load2"  , RM },
+	{STORE2 , "store2" , RM },
+	{LOADR  , "loadr"  , RR },
+	{LOADR2 , "storer" , RR },
+	{STORER , "loadr2" , RM },
+	{STORER2, "storer2", RR }
 };
 
 class FUPM_CPU
 {
 private:
 	bool running;
-	int Registers[16];
+	int  Registers[16];
 	char Flags; // 3 - ne, 2 - e, 1 - g, 0 - l
-	int Stack[STACK_SIZE];
-	int* memory;				unsigned int memory_size;
-	int* commands;				unsigned int amount_of_commands;
+	int  Stack[STACK_SIZE];
 	
 	
 public:
 	FUPM_CPU();
-	~FUPM_CPU();
+	// ~FUPM_CPU();
 	void dump();
 	void load_from_file(string filename);
 	void run();
@@ -267,19 +246,9 @@ public:
 	void STORER2	(registers ri, registers ro, int number);
 };
 
-void normalize_float(double number, double* mantiss, int* n)
-{
-	int i = 0;
-	while (log2(number) - i >= 1) i++;
-	*mantiss = number;
-	for (int j = 0; j < i; j++) *mantiss /= 2;
-	*n = i;
-}
-
 FUPM_CPU::FUPM_CPU():
 running(false),
-Flags(0),
-amount_of_commands(0)
+Flags(0)
 {
 	for (int i = 0; i < AMOUNT_OF_CPU_COMMANDS; ++i)
 	{
@@ -305,38 +274,26 @@ amount_of_commands(0)
 	reg_number["r15"] = r15;
 
 	for (int i = 0; i <= r15; i++) Registers[i] = 0;
-	memory = (int* )calloc(DEFAULT_MEMORY_SIZE, sizeof(int));
-	memory_size = DEFAULT_MEMORY_SIZE;
+	Registers[r14] = STACK_SIZE - 1;
+
 	for (int i = 0; i < STACK_SIZE; i++)
 	{
-		Stack[i] = 0;
+		Stack[i] = STACK_POISON;
 	}
-}
-
-FUPM_CPU::~FUPM_CPU()
-{
-	free(memory);
-	free(commands);
 }
 
 void FUPM_CPU::dump()
 {
 	cout << "DUMP: FUPM_CPU ("; if (running) cout << "running"; else cout << "not running"; cout << ")\n{\n	Stack (" << Registers[r14] << "):\n	{\n";
 	
-	for (int i = 0; i < Registers[r14]; i++) cout << "		Stack[" << i << "] = " << Stack[i] << endl;
+	for (int i = 0; i < STACK_SIZE; i++)
+		if (Stack[i] != STACK_POISON)
+			cout << "		Stack[" << i << "] = " << Stack[i] << endl;
 	
 	cout << "	}\n	Registers:\n	{\n";
 	for (int i = 0; i <= r15; i++) cout << "		r" << i << " = " << Registers[i] << endl;
-	cout << "	}\n";
+	cout << "	}\n\n";
 	
-	cout << "	amount_of_commands = " << amount_of_commands << endl;
-	cout << "	commands:\n 	[";
-	for (int i = 0; i < amount_of_commands; ++i)
-	{
-		cout << commands[i] << ' ';
-	}
-	cout << "]\n";
-
 	cout << "	Flags:\n	{\n";
 	if (Flags & 0b1000)
 		cout << "		ne";
@@ -354,7 +311,6 @@ void FUPM_CPU::dump()
 void FUPM_CPU::HALT(registers r, int number)
 {
 	running = false;
-	Registers[r] = number;
 }
 
 void FUPM_CPU::SYSCALL(registers r, int number)
@@ -386,6 +342,7 @@ void FUPM_CPU::SYSCALL(registers r, int number)
 			tmp.u[0] = Registers[r];
 			tmp.u[1] = Registers[r+1];
 			printf("%lg", tmp.d);
+			break;
 		}
 		case 105:
 		{
@@ -566,30 +523,26 @@ void FUPM_CPU::DTOI		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::PUSH		(registers r, int number)
 {
-	Stack[Registers[r14]++] = Registers[r] + number;
+	Stack[Registers[r14]--] = Registers[r] + number;
 }
 void FUPM_CPU::POP		(registers r, int number)
 {
-	Registers[r] = Stack[Registers[r14]-- - 1] + number;
+	Registers[r] = Stack[++Registers[r14]] + number;
 }
 void FUPM_CPU::CALL		(registers ri, registers ro, int number)
 {
-	Stack[Registers[r14]++] = Registers[r15];
+	Stack[Registers[r14]--] = Registers[r15];
 	Registers[r15] = Registers[ro] + number;
 }
 void FUPM_CPU::CALLI		(registers r, unsigned int number)
 {
-	Stack[Registers[r14]++] = Registers[r15];
+	Stack[Registers[r14]--] = Registers[r15];
 	Registers[r15] = number;
 }
 void FUPM_CPU::RET		(int number)
 {
-	for (int i = 0; i < number; ++i)
-	{
-		Stack[Registers[r14]-1] = 0;
-		Registers[r14]--;
-	}
-	Registers[r15] = Stack[Registers[r14]-- - 1];
+	Registers[r14] += number;
+	Registers[r15] = Stack[++Registers[r14]];
 }
 
 void FUPM_CPU::CMP		(registers ri, registers ro, int number)
@@ -660,46 +613,46 @@ void FUPM_CPU::JG			(unsigned int number)
 }
 void FUPM_CPU::LOAD		(registers r, unsigned int number)
 {
-	Registers[r] = memory[number];
+	Registers[r] = Stack[number];
 }
 void FUPM_CPU::STORE		(registers r, unsigned int number)
 {
-	memory[number] = Registers[r];
+	Stack[number] = Registers[r];
 }
 void FUPM_CPU::LOAD2		(registers r, unsigned int number)
 {
-	Registers[r] = memory[number];
-	Registers[r+1] = memory[number+1];
+	Registers[r] = Stack[number];
+	Registers[r+1] = Stack[number+1];
 }
 void FUPM_CPU::STORE2		(registers r, unsigned int number)
 {
-	memory[number] = Registers[r];
-	memory[number+1] = Registers[r+1];
+	Stack[number] = Registers[r];
+	Stack[number+1] = Registers[r+1];
 }
 void FUPM_CPU::LOADR		(registers ri, registers ro, int number)
 {
-	Registers[ri] = Registers[ro] + number;
+	Registers[ri] = Stack[Registers[ro] + number];
 }
 void FUPM_CPU::STORER		(registers ri, registers ro, int number)
 {
-	memory[ro] = Registers[ri] + number;
+	Stack[Registers[r0]+number] = Registers[ri];
 }
 void FUPM_CPU::LOADR2		(registers ri, registers ro, int number)
 {
-	Registers[ri] = Registers[ro] + number;
-	Registers[ri+1] = Registers[ro] + number + 1;
+	Registers[ri] = Stack[Registers[ro] + number];
+	Registers[ri+1] = Stack[Registers[ro] + number + 1];
 }
 void FUPM_CPU::STORER2	(registers ri, registers ro, int number)
 {
-	memory[ro] = Registers[ri] + number;
-	memory[ro+1] = Registers[ri+1] + number;
+	Stack[Registers[ro]] = Registers[ri] + number;
+	Stack[Registers[ro]+1] = Registers[ri+1] + number;
 }
 
 void FUPM_CPU::load_from_file(string filename)
 {
 	std::ifstream fin(filename);
 	assert("FILE NOT EXISTS" && fin);
-	string tmp, cmd, main_label;
+	string tmp, main_label;
 
 	int count = 0;
 	while (!fin.eof())
@@ -718,14 +671,14 @@ void FUPM_CPU::load_from_file(string filename)
 		{
 			case RI:
 			{
-				count += 3;
+				count++;
 				fin >> tmp;
 				fin >> tmp;
 				break;
 			}
 			case RR:
 			{
-				count += 4;
+				count++;
 				fin >> tmp;
 				fin >> tmp;
 				fin >> tmp;
@@ -733,20 +686,20 @@ void FUPM_CPU::load_from_file(string filename)
 			}
 			case RM:
 			{
-				count += 3;
+				count++;
 				fin >> tmp;
 				fin >> tmp;
 				break;
 			}
 			case RI1:
 			{
-				count += 2;
+				count++;
 				fin >> tmp;
 				break;
 			}
 			case RM1:
 			{
-				count += 2;
+				count++;
 				fin >> tmp;
 				break;
 			}
@@ -756,6 +709,7 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.close();
 	fin.open(filename);
 	
+
 	if (labels["main"]-1 != -1)
 	{
 		Registers[r15] = labels["main"]-1;
@@ -767,142 +721,105 @@ void FUPM_CPU::load_from_file(string filename)
 	}
 
 
-	while(!fin.eof())
-	{
-		fin >> tmp;
-		if (tmp.find(':') != -1)
-		{
-			fin >> tmp;
-		}
-		else if (tmp.find("end") != -1)
-		{
-			break;
-		}
-
-
-		switch (cmd_types[cmds[cmd]])
-		{
-			case RI:
-			{
-				amount_of_commands += 3;
-				fin >> tmp;
-				fin >> tmp;
-				break;
-			}
-			case RR:
-			{
-				amount_of_commands += 4;
-				fin >> tmp;
-				fin >> tmp;
-				fin >> tmp;
-				break;
-			}
-			case RM:
-			{
-				amount_of_commands += 3;
-				fin >> tmp;
-				fin >> tmp;
-				break;
-			}
-			case RI1:
-			{
-				amount_of_commands += 2;
-				fin >> tmp;
-				break;
-			}
-			case RM1:
-			{
-				amount_of_commands += 2;
-				fin >> tmp;
-				break;
-			}
-			default: assert(!"FATAL ERROR");
-		}
-	}
-
-	commands = (int* )calloc(amount_of_commands, sizeof(int));
-	
-	fin.close();
-	fin.open(filename);
-	
 	count = 0;
-	while(!fin.eof())
+	while(true)
 	{
 		fin >> tmp;
 		if (tmp.find(':') != -1)
+		{
 			fin >> tmp;
+		}
 		else if (tmp.find("end") != -1)
 		{
 			fin >> tmp;
 			if (tmp.find(main_label) != -1)
-				commands[count] = -1;
-			break;
+			{
+				Stack[count++] = 0;
+				break;
+			}
+			else
+				assert(0);
 		}
+
 		switch (cmd_types[cmds[tmp]])
 		{
 			case RI:
 			{
-				commands[count++] = cmds[tmp];
+				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
-				commands[count++] = reg_number[tmp];
+				Stack[count] |= (reg_number[tmp] << 20);
 				fin >> tmp;
-				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp]-1;
-				else
-					commands[count++] = std::stoi(tmp);
+				Stack[count++] |= std::stoi(tmp);
 				break;
 			}
 			case RR:
 			{
-				commands[count++] = cmds[tmp];
+				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
-				commands[count++] = reg_number[tmp];
+				Stack[count] |= (reg_number[tmp] << 20);
 				fin >> tmp;
-				commands[count++] = reg_number[tmp];
+				Stack[count] |= (reg_number[tmp] << 16);
 				fin >> tmp;
-				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp]-1;
-				else
-					commands[count++] = std::stoi(tmp);
+				Stack[count++] |= std::stoi(tmp);
 				break;
 			}
 			case RM:
 			{
-				commands[count++] = cmds[tmp];
+				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
-				commands[count++] = reg_number[tmp];
+				Stack[count] |= (reg_number[tmp] << 20);
 				fin >> tmp;
-				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp]-1;
-				else
-					commands[count++] = std::stoi(tmp);
+				Stack[count++] |= std::stoi(tmp);
 				break;
 			}
 			case RI1:
 			{
-				commands[count++] = cmds[tmp];
+				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
 				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp]-1;
+				{
+					Stack[count++] |= ((labels[tmp]-1) << 24);
+				}
 				else
-					commands[count++] = std::stoi(tmp);
+				{
+					Stack[count++] += (std::stoi(tmp) << 24);
+				}
 				break;
 			}
 			case RM1:
 			{
-				commands[count++] = cmds[tmp];
+				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
 				if (labels[tmp]-1 != -1)
-					commands[count++] = labels[tmp]-1;
+				{
+					Stack[count++] |= ((labels[tmp]-1) << 24);
+				}
 				else
-					commands[count++] = std::stoi(tmp);
+				{
+					Stack[count++] += (std::stoi(tmp) << 24);
+				}
 				break;
 			}
 			default: assert(!"FATAL ERROR");
 		}
-		
+
 	}
 	fin.close();
+}
+
+int cmd_to_cmd_number(int cmd)
+{
+	return ((cmd & (0xFF << 24)) >> 24);
+}
+
+registers cmd_take_register_number1(int cmd)
+{
+	return (registers)((cmd & (0b1111 << 20)) >> 20);
+}
+
+registers cmd_take_register_number2(int cmd)
+{
+	return (registers)((cmd & (0b1111 << 16)) >> 16);
 }
 
 void FUPM_CPU::run()
@@ -910,50 +827,62 @@ void FUPM_CPU::run()
 	registers r, ro, ri;
 	int number;
 	unsigned int unumber;
-	int cmd;
+	int cmd; int count = 0;
 	running = true;
 	
 	while (running)
 	{
-		cmd = commands[Registers[r15]++];
-		cout << cmd << endl;
-		switch (cmd_types[cmd])
+		cmd = Stack[count++];
+		// cout << count;
+		// cout << cmd << endl;
+
+		// cout << "cmd: " << cmd_to_cmd_number(cmd) << endl;
+		// cout << "register: " << cmd_take_register_number1(cmd) << endl;
+		// cout << "number: " << (cmd & 0x000FFFFF) << endl << endl;
+
+		switch (cmd_types[cmd_to_cmd_number(cmd)])
 		{
 			case RI:
 			{
-				r = (registers)commands[Registers[r15]++];
-				number = commands[Registers[r15]++];
+				r = cmd_take_register_number1(cmd);
+				number = cmd & 0x000FFFFF;
+				unumber = cmd & 0x000FFFFF;
 				break;
 			}
 			case RR:
 			{
-				ri = (registers)commands[Registers[r15]++];
-				ro = (registers)commands[Registers[r15]++];
-				number = (registers)commands[Registers[r15]++];
+				ri = cmd_take_register_number1(cmd);
+				ro = cmd_take_register_number2(cmd);
+				number = cmd & 0x0000FFFF;
+				unumber = cmd & 0x0000FFFF;
 				break;
 			}
 			case RM:
 			{
-				r = (registers)commands[Registers[r15]++];
-				unumber = (registers)commands[Registers[r15]++];
+				r = cmd_take_register_number1(cmd);
+				unumber = cmd & 0x000FFFFF;
+				number = cmd & 0x000FFFFF;
 				break;
 			}
 			case RI1:
 			{
-				number = commands[Registers[r15]++];
+				unumber = cmd & 0x000FFFFF;
+				number = cmd & 0x000FFFFF;
 				break;
 			}
 			case RM1:
 			{
-				number = commands[Registers[r15]++];
+				unumber = cmd & 0x000FFFFF;
+				number = cmd & 0x000FFFFF;
 				break;
 			}
 			default: assert(!"FATAL ERROR");
 		}
 
-		switch (cmd)
+		// cout << cmd_to_cmd_number(cmd) << endl;
+
+		switch (cmd_to_cmd_number(cmd))
 		{
-			case -1: {running = false;}
 			case 0:	    { HALT(r, number); break;}        
 			case 1:	    { SYSCALL(r, number); break;}        
 			case 2:	    { ADD(ri, ro, number); break;}        
