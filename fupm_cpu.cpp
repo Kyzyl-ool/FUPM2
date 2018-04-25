@@ -76,6 +76,7 @@ enum code {
     MULI  	 =  7,
     DIV  	 =  8,
     DIVI  	 =  9,
+
     LC  	 = 12,
     SHL  	 = 13,
     SHLI  	 = 14,
@@ -89,6 +90,7 @@ enum code {
     XORI  	 = 22,
     NOT  	 = 23,
     MOV  	 = 24,
+
 	ADDD  	 = 32,
     SUBD  	 = 33,
     MULD  	 = 34,
@@ -110,6 +112,7 @@ enum code {
     JL  	 = 50,
     JGE  	 = 51,
     JG  	 = 52,
+
     LOAD  	 = 64,
     STORE  	 = 65,
     LOAD2  	 = 66,
@@ -274,7 +277,7 @@ Flags(0)
 	reg_number["r15"] = r15;
 
 	for (int i = 0; i <= r15; i++) Registers[i] = 0;
-	Registers[r14] = STACK_SIZE - 1;
+	Registers[r14] = STACK_SIZE;
 
 	for (int i = 0; i < STACK_SIZE; i++)
 	{
@@ -284,7 +287,7 @@ Flags(0)
 
 void FUPM_CPU::dump()
 {
-	cout << "DUMP: FUPM_CPU ("; if (running) cout << "running"; else cout << "not running"; cout << ")\n{\n	Stack (" << Registers[r14] << "):\n	{\n";
+	cout << "DUMP: FUPM_CPU ("; if (running) cout << "running"; else cout << "not running"; cout << ")\n{\n	Stack (" << STACK_SIZE << "):\n	{\n";
 	
 	for (int i = 0; i < STACK_SIZE; i++)
 		if (Stack[i] != STACK_POISON)
@@ -352,6 +355,14 @@ void FUPM_CPU::SYSCALL(registers r, int number)
 		case 0:
 		{
 			running = false;
+			break;
+		}
+		case 17:
+		{
+			dump();
+			char tmp;
+			std::cout << "Enter anything..." << endl;
+			std::cin >> tmp;
 			break;
 		}
 		default:
@@ -523,26 +534,26 @@ void FUPM_CPU::DTOI		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::PUSH		(registers r, int number)
 {
-	Stack[Registers[r14]--] = Registers[r] + number;
+	Stack[--Registers[r14]] = Registers[r] + number;
 }
 void FUPM_CPU::POP		(registers r, int number)
 {
-	Registers[r] = Stack[++Registers[r14]] + number;
+	Registers[r] = Stack[Registers[r14]++] + number;
 }
 void FUPM_CPU::CALL		(registers ri, registers ro, int number)
 {
-	Stack[Registers[r14]--] = Registers[r15];
+	Stack[--Registers[r14]] = Registers[r15];
 	Registers[r15] = Registers[ro] + number;
 }
 void FUPM_CPU::CALLI		(registers r, unsigned int number)
 {
-	Stack[Registers[r14]--] = Registers[r15];
+	Stack[--Registers[r14]] = Registers[r15];
 	Registers[r15] = number;
 }
 void FUPM_CPU::RET		(int number)
 {
+	Registers[r15] = Stack[Registers[r14]++];
 	Registers[r14] += number;
-	Registers[r15] = Stack[++Registers[r14]];
 }
 
 void FUPM_CPU::CMP		(registers ri, registers ro, int number)
@@ -708,7 +719,7 @@ void FUPM_CPU::load_from_file(string filename)
 	}
 	fin.close();
 	fin.open(filename);
-	
+
 
 	if (labels["main"]-1 != -1)
 	{
@@ -725,9 +736,11 @@ void FUPM_CPU::load_from_file(string filename)
 	while(true)
 	{
 		fin >> tmp;
+		// cout << tmp << endl;
 		if (tmp.find(':') != -1)
 		{
 			fin >> tmp;
+			// cout << tmp << endl;
 		}
 		else if (tmp.find("end") != -1)
 		{
@@ -741,10 +754,24 @@ void FUPM_CPU::load_from_file(string filename)
 				assert(0);
 		}
 
+
+	
+
+		// cout << cmds["ret"] << endl;
+					// std::exit(0);
+
 		switch (cmd_types[cmds[tmp]])
 		{
 			case RI:
 			{
+				if (tmp.find("ret") != -1)
+				{
+					cout << tmp << cmds[tmp] << endl;
+					std::exit(0);
+				}
+				
+
+
 				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
 				Stack[count] |= (reg_number[tmp] << 20);
@@ -776,13 +803,24 @@ void FUPM_CPU::load_from_file(string filename)
 			{
 				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
+				
+				if (tmp.find(':') != -1)
+				{
+					tmp.pop_back();
+				}
+
 				if (labels[tmp]-1 != -1)
 				{
-					Stack[count++] |= ((labels[tmp]-1) << 24);
+
+					Stack[count++] |= (labels[tmp]-1);
+					// cout << Stack[count-1] << endl;
+					// std::exit(0);
 				}
 				else
 				{
-					Stack[count++] += (std::stoi(tmp) << 24);
+					Stack[count++] |= std::stoi(tmp);
+					// cout << Stack[count-1] << endl;
+					// std::exit(0);
 				}
 				break;
 			}
@@ -790,13 +828,24 @@ void FUPM_CPU::load_from_file(string filename)
 			{
 				Stack[count] = (cmds[tmp] << 24);
 				fin >> tmp;
+				
+				if (tmp.find(':') != -1)
+				{
+					tmp.pop_back();
+				}
+
 				if (labels[tmp]-1 != -1)
 				{
-					Stack[count++] |= ((labels[tmp]-1) << 24);
+
+					Stack[count++] |= (labels[tmp]-1);
+					// cout << Stack[count-1] << endl;
+					// std::exit(0);
 				}
 				else
 				{
-					Stack[count++] += (std::stoi(tmp) << 24);
+					Stack[count++] |= std::stoi(tmp);
+					// cout << Stack[count-1] << endl;
+					// std::exit(0);
 				}
 				break;
 			}
@@ -827,12 +876,12 @@ void FUPM_CPU::run()
 	registers r, ro, ri;
 	int number;
 	unsigned int unumber;
-	int cmd; int count = 0;
+	int cmd;
 	running = true;
 	
 	while (running)
 	{
-		cmd = Stack[count++];
+		cmd = Stack[Registers[r15]++];
 		// cout << count;
 		// cout << cmd << endl;
 
