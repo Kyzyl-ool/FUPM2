@@ -729,6 +729,7 @@ void FUPM_CPU::load_from_file(string filename)
 	else
 	{
 		main_label = labels.begin()->first;
+		// cout << main_label << endl;
 	}
 
 
