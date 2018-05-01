@@ -277,7 +277,7 @@ Flags(0)
 	reg_number["r15"] = r15;
 
 	for (int i = 0; i <= r15; i++) Registers[i] = 0;
-	Registers[r14] = STACK_SIZE;
+	Registers[r14] = STACK_SIZE - 1;
 
 	for (int i = 0; i < STACK_SIZE; i++)
 	{
@@ -344,7 +344,7 @@ void FUPM_CPU::SYSCALL(registers r, int number)
 			du tmp;
 			tmp.u[0] = Registers[r];
 			tmp.u[1] = Registers[r+1];
-			printf("%lg", tmp.d);
+			printf("%lf", tmp.d);
 			break;
 		}
 		case 105:
@@ -534,25 +534,25 @@ void FUPM_CPU::DTOI		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::PUSH		(registers r, int number)
 {
-	Stack[--Registers[r14]] = Registers[r] + number;
+	Stack[Registers[r14]--] = Registers[r] + number;
 }
 void FUPM_CPU::POP		(registers r, int number)
 {
-	Registers[r] = Stack[Registers[r14]++] + number;
+	Registers[r] = Stack[++Registers[r14]] + number;
 }
 void FUPM_CPU::CALL		(registers ri, registers ro, int number)
 {
-	Stack[--Registers[r14]] = Registers[r15];
+	Stack[Registers[r14]--] = Registers[r15];
 	Registers[r15] = Registers[ro] + number;
 }
 void FUPM_CPU::CALLI		(registers r, unsigned int number)
 {
-	Stack[--Registers[r14]] = Registers[r15];
+	Stack[Registers[r14]--] = Registers[r15];
 	Registers[r15] = number;
 }
 void FUPM_CPU::RET		(int number)
 {
-	Registers[r15] = Stack[Registers[r14]++];
+	Registers[r15] = Stack[++Registers[r14]];
 	Registers[r14] += number;
 }
 
@@ -642,7 +642,10 @@ void FUPM_CPU::STORE2		(registers r, unsigned int number)
 }
 void FUPM_CPU::LOADR		(registers ri, registers ro, int number)
 {
-	Registers[ri] = Stack[Registers[ro] + number];
+	if (ro != r14)
+		Registers[ri] = Stack[Registers[ro] + number];
+	else
+		Registers[ri] = Stack[Registers[ro] + number + 1];
 }
 void FUPM_CPU::STORER		(registers ri, registers ro, int number)
 {
@@ -650,8 +653,16 @@ void FUPM_CPU::STORER		(registers ri, registers ro, int number)
 }
 void FUPM_CPU::LOADR2		(registers ri, registers ro, int number)
 {
-	Registers[ri] = Stack[Registers[ro] + number];
-	Registers[ri+1] = Stack[Registers[ro] + number + 1];
+	if (ro != r14)
+	{
+		Registers[ri] = Stack[Registers[ro] + number];
+		Registers[ri+1] = Stack[Registers[ro] + number + 1];
+	}
+	else
+	{
+		Registers[ri] = Stack[Registers[ro] + number + 1];
+		Registers[ri+1] = Stack[Registers[ro] + number + 2];	
+	}
 }
 void FUPM_CPU::STORER2	(registers ri, registers ro, int number)
 {
@@ -663,7 +674,7 @@ void FUPM_CPU::load_from_file(string filename)
 {
 	std::ifstream fin(filename);
 	assert("FILE NOT EXISTS" && fin);
-	string tmp, main_label;
+	string tmp;
 
 	int count = 0;
 	while (!fin.eof())
@@ -720,19 +731,6 @@ void FUPM_CPU::load_from_file(string filename)
 	fin.close();
 	fin.open(filename);
 
-
-	if (labels["main"]-1 != -1)
-	{
-		Registers[r15] = labels["main"]-1;
-		main_label = "main";
-	}
-	else
-	{
-		main_label = labels.begin()->first;
-		// cout << main_label << endl;
-	}
-
-
 	count = 0;
 	while(true)
 	{
@@ -746,13 +744,8 @@ void FUPM_CPU::load_from_file(string filename)
 		else if (tmp.find("end") != -1)
 		{
 			fin >> tmp;
-			if (tmp.find(main_label) != -1)
-			{
-				Stack[count++] = 0;
-				break;
-			}
-			else
-				assert(0);
+			Registers[r15] = labels[tmp]-1;
+			break;
 		}
 
 
